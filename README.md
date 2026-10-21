@@ -1,200 +1,176 @@
  <div align="center">
 
-#  LiquidGlass Studio
+# LiquidGlass Studio
 
-### A new dimension of glass on the web.
+### Optical Refraction. Modern Interfaces. Complete Creative Control.
 
-**A browser-based optical playground for crafting, customizing, and exporting immersive liquid-glass interfaces.**
+A browser-based studio for crafting liquid-glass interfaces with procedural surface maps, SVG displacement, dynamic lighting, and customizable optical effects.
 
-<p align="center">
-  <a href="https://tylonmademe-1.github.io/liquid-glass-studio/">
-    <img src="https://img.shields.io/badge/✦_EXPLORE_STUDIO-Live_Demo-7C6CFF?style=for-the-badge&labelColor=111827" alt="Explore Live Studio" />
-  </a>
-  <a href="https://github.com/tylonmademe-1/liquid-glass-studio">
-    <img src="https://img.shields.io/badge/GitHub-Repository-18181B?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repository" />
-  </a>
-</p>
+<br/>
 
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Inter&weight=500&size=16&duration=2800&pause=800&color=A5B4FC&center=true&vCenter=true&width=600&lines=Beyond+Blur.+Into+Refraction.;Shape+Light.+Craft+Depth.;Design+Glass.+Generate+Code.;Zero+Dependencies.+Unlimited+Possibilities." alt="Beyond blur, into refraction" />
-</p>
+<a href="https://tylonmademe-1.github.io/liquid-glass-studio/">
+  <img src="https://img.shields.io/badge/EXPLORE_STUDIO-6366F1?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Explore Studio"/>
+</a>
+<a href="https://github.com/tylonmademe-1/liquid-glass-studio">
+  <img src="https://img.shields.io/badge/VIEW_SOURCE-18181B?style=for-the-badge&logo=github&logoColor=white" alt="View Source"/>
+</a>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Vanilla-HTML%20%7C%20CSS%20%7C%20JS-F7DF1E?style=flat-square&logo=javascript&logoColor=111827" alt="Vanilla JavaScript" />
-  <img src="https://img.shields.io/badge/Dependencies-Zero-10B981?style=flat-square" alt="Zero Dependencies" />
-  <img src="https://img.shields.io/badge/Rendering-SVG%20Filters-8B5CF6?style=flat-square" alt="SVG Filters" />
-  <img src="https://img.shields.io/badge/License-MIT-64748B?style=flat-square" alt="MIT License" />
-</p>
+<br/><br/>
 
-<p align="center">
-  <a href="#-overview">Overview</a> ·
-  <a href="#-features">Features</a> ·
-  <a href="#-optical-engine">Optical Engine</a> ·
-  <a href="#-quick-start">Quick Start</a> ·
-  <a href="#-templates">Templates</a> ·
-  <a href="#-code-export">Code Export</a> ·
-  <a href="#-contributing">Contributing</a>
-</p>
+<img src="https://img.shields.io/badge/Vanilla_JS-Framework_Free-F7DF1E?style=flat-square&logo=javascript&logoColor=111827" alt="Vanilla JavaScript"/>
+<img src="https://img.shields.io/badge/SVG-Optical_Engine-8B5CF6?style=flat-square" alt="SVG Optical Engine"/>
+<img src="https://img.shields.io/badge/Dependencies-Zero-10B981?style=flat-square" alt="Zero Dependencies"/>
+<img src="https://img.shields.io/badge/License-MIT-64748B?style=flat-square" alt="MIT License"/>
+
+<br/><br/>
+
+**Designed for developers who want more than blur.**
 
 </div>
 
 ---
 
-## ✨ Overview
+## 01 — Project Overview
 
-**LiquidGlass Studio** is an interactive, browser-based studio for exploring realistic liquid-glass effects and building modern glassmorphism interfaces.
+LiquidGlass Studio explores the intersection of modern interface design and browser-based optical effects.
 
-Traditional glassmorphism often relies on a translucent background and `backdrop-filter: blur()`. LiquidGlass Studio takes the concept further by combining SVG displacement, procedural surface maps, layered highlights, and carefully tuned lighting to create the appearance of curved, polished glass.
+Conventional glassmorphism typically uses transparency, background blur, and subtle borders. LiquidGlass Studio extends that visual language through displacement mapping, procedural surface geometry, layered specular highlights, and configurable lighting to approximate the appearance of polished, curved glass.
 
-Instead of manually experimenting with CSS, you can explore a desktop-inspired environment, adjust optical parameters in real time, interact with floating glass elements, and generate reusable HTML/CSS.
-
-**The goal:** make advanced glass effects easier to experiment with, customize, and integrate into real websites.
-
-### What makes it different?
-
-- **Optical distortion:** Displace the sampled image to simulate the curvature of a glass lens.
-- **Procedural surfaces:** Generate normal-like maps for directional distortion.
-- **Dynamic lighting:** Combine reflections, edge highlights, and inset shadows for a sense of depth.
-- **Interactive workspace:** Experiment with draggable windows, themes, wallpapers, and controls.
-- **Code generation:** Export a starting point for implementing your own liquid-glass interface.
-- **No framework dependency:** Built around standard browser technologies.
-
-> [!NOTE]
-> The visual result depends on the browser's SVG filter and backdrop-filter support. Refraction-like distortion is a rendering technique, not a complete physical optics simulation.
-
----
-
-## 🎨 Features
+The result is an interactive design environment where developers can experiment with glass surfaces, control their optical characteristics, explore interface templates, and export implementation-ready starting points.
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### 💧 Liquid Glass Lens
+**Optical Rendering**
 
-- Curved, translucent glass surfaces
-- Adjustable distortion intensity
-- Frosted and crystal-clear appearances
-- Layered highlights and edge reflections
-- Floating, draggable glass elements
+Create refraction-inspired distortion using SVG filters and procedural surface maps.
 
 </td>
 <td width="50%" valign="top">
 
-### 🎛️ Optical Control Panel
+**Interactive Design**
 
-- Width and height adjustments
-- Corner-radius customization
-- Refraction and displacement scale
-- Post-processing blur
-- Brightness and saturation
-- Immediate visual feedback
+Adjust glass dimensions, curvature, blur, brightness, saturation, and distortion.
 
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 
-### 🖥️ Desktop Experience
+**Desktop Workspace**
 
-- macOS-inspired window controls
-- Draggable application windows
-- Minimize and maximize interactions
-- Spotlight-style search
-- Switchable desktop wallpapers
+Explore floating windows, desktop-style interactions, wallpapers, and glass elements.
 
 </td>
 <td width="50%" valign="top">
 
-### ⚡ Developer Workflow
+**Developer Workflow**
 
-- HTML/CSS code generation
-- Copy-ready implementation snippets
-- Reusable glass-effect configurations
-- Dependency-free core implementation
-- Simple local development workflow
+Generate reusable HTML/CSS and adapt glass effects to your own projects.
 
 </td>
 </tr>
 </table>
 
-### Additional details
-
-- **Liquid sliders:** Interactive capsule controls with glass-inspired visual feedback.
-- **Curated templates:** Starting points for navigation bars, cards, and desktop docks.
-- **Responsive presentation:** Designed to adapt the workspace to different viewport sizes.
-- **Performance-conscious rendering:** Uses browser-native rendering features and avoids unnecessary layout work during interactions where possible.
-
----
-
-## 🪄 The Experience
+## 02 — Visual Showcase
 
 <div align="center">
 
-| Design element | Purpose |
-|:--|:--|
-| 🔮 Optical lens | Creates the appearance of curved glass and image distortion |
-| ✨ Specular highlights | Adds reflections and visual definition |
-| 🌫️ Frosted surface | Softens background details while preserving color |
-| 🌈 Color transmission | Retains and enhances colors passing through the glass |
-| 🪟 Floating windows | Provides an interactive environment for experimentation |
-| 🎚️ Live controls | Makes visual tuning direct and intuitive |
+<!-- Replace these placeholders with screenshots committed to your repository. -->
+
+<!--
+<img src="docs/images/studio-preview.png" alt="LiquidGlass Studio interface" width="100%"/>
+-->
+
+*Add a high-resolution screenshot of the actual studio here to showcase the workspace, optical controls, and glass rendering.*
 
 </div>
 
-Want to experience the effect instead of just reading about it?
+The studio is designed around three complementary experiences:
+
+- **Experiment:** Explore different glass shapes, lighting conditions, and distortion levels.
+- **Customize:** Refine the visual properties of individual elements using interactive controls.
+- **Export:** Take your experiments into real web projects using generated HTML and CSS.
 
 <div align="center">
 
-### [Launch LiquidGlass Studio ↗](https://tylonmademe-1.github.io/liquid-glass-studio/)
-
-*Open the studio, experiment with the optical settings, and explore the available templates.*
+[**Open the Live Studio →**](https://tylonmademe-1.github.io/liquid-glass-studio/)
 
 </div>
 
 ---
 
-## 🔬 Optical Engine
+## 03 — Core Capabilities
 
-LiquidGlass Studio combines several browser rendering techniques to approximate the visual properties of thick, curved glass.
+### Optical Effects Engine
 
-### Rendering pipeline
+| Capability | Description |
+|---|---|
+| Surface distortion | SVG displacement-based image deformation |
+| Procedural mapping | Surface-map generation for directional displacement |
+| Refraction controls | Adjustable distortion scale and surface geometry |
+| Frosted glass | Configurable blur and translucent backgrounds |
+| Specular lighting | Layered highlights, rim lighting, and inset shadows |
+| Color transmission | Brightness and saturation adjustments |
 
-```mermaid
+### Interactive Workspace
+
+- **Floating glass lens:** Move and resize glass elements to experiment with their appearance.
+- **Desktop environment:** Work with draggable windows and desktop-inspired controls.
+- **Dynamic wallpapers:** Switch between visual backgrounds to evaluate the glass effect.
+- **Interactive sliders:** Adjust optical parameters through custom capsule-style controls.
+- **Window management:** Access supported minimize, maximize, and search interactions.
+- **Keyboard navigation:** Use available shortcuts to access workspace functionality.
+
+### Developer Experience
+
+- HTML/CSS code generation.
+- Reusable interface templates.
+- Framework-independent implementation.
+- Lightweight browser-native technologies.
+- Local development and static deployment workflows.
+
+> Feature availability depends on the implementation in the repository. Rendering behavior and advanced filtering support can vary between browsers.
+
+---
+
+## 04 — Optical Engine Architecture
+
+LiquidGlass Studio combines procedural geometry, SVG filter primitives, and layered styling to approximate the behavior of light passing through a curved glass surface.
+
+```mermaid id="opticalpipeline"
 flowchart TD
-    A["🖼️ Background Content"] --> B["🧮 Procedural Surface Map"]
-    B --> C["↔️ SVG Displacement Filter"]
-    A --> C
-    C --> D["🌫️ Blur & Color Processing"]
-    D --> E["✨ Specular Highlights"]
-    E --> F["💧 Final Liquid Glass Surface"]
+    A["Background Content"] --> C["SVG Displacement Pipeline"]
+    B["Procedural Surface Map"] --> C
+    C --> D["Blur and Color Processing"]
+    D --> E["Specular Highlights"]
+    E --> F["Rim Lighting and Depth"]
+    F --> G["Final Glass Interface"]
 
-    classDef source fill:#172554,stroke:#818cf8,color:#ffffff
-    classDef process fill:#1e293b,stroke:#64748b,color:#ffffff
-    classDef output fill:#312e81,stroke:#a5b4fc,color:#ffffff
+    classDef input fill:#172554,stroke:#818cf8,color:#fff
+    classDef engine fill:#27272a,stroke:#71717a,color:#fff
+    classDef output fill:#312e81,stroke:#a5b4fc,color:#fff
 
-    class A source
-    class B,C,D,E process
-    class F output
+    class A,B input
+    class C,D,E,F engine
+    class G output
 ```
 
-### 1. Procedural surface mapping
+### Surface-map generation
 
-A generated surface map describes how image pixels should be displaced across the glass.
+A procedural surface map can encode the direction and magnitude of image displacement. Signed distance fields (SDFs) describe the distance to a surface boundary and can be used to derive gradients that approximate surface normals.
 
-A signed distance field (SDF) can describe the distance from a point to a lens boundary. Its gradients can then be used to estimate surface normals or displacement directions.
+For an 8-bit RGB displacement map:
 
-For a conventional RGB displacement map:
+- **Red:** horizontal displacement input.
+- **Green:** vertical displacement input.
+- **Neutral midpoint:** approximately `128` for an 8-bit channel.
+- **Displacement scale:** controls the strength of the resulting deformation.
 
-- **Red channel:** horizontal displacement input.
-- **Green channel:** vertical displacement input.
-- **Blue channel:** available for additional surface data or shader-specific purposes.
+### SVG displacement
 
-A neutral displacement value is typically around `128` in an 8-bit channel, where the displacement filter interprets that value as the midpoint.
-
-### 2. SVG displacement
-
-The SVG `<feDisplacementMap>` primitive uses a source image and a displacement map to distort image coordinates.
+The SVG `<feDisplacementMap>` primitive uses channel values from a displacement map to offset source-image coordinates.
 
 ```html
 <filter id="liquid-glass-filter">
@@ -208,11 +184,11 @@ The SVG `<feDisplacementMap>` primitive uses a source image and a displacement m
 </filter>
 ```
 
-This illustrates the displacement stage only. A complete implementation must also provide a valid `surface-map` input and integrate the filter with the actual rendering and backdrop-sampling setup.
+This is an illustrative fragment, not a complete standalone refraction implementation. A functioning pipeline must provide the referenced map and integrate it with the appropriate source image and rendering context.
 
-### 3. Lighting and depth
+### Lighting and surface depth
 
-The glass appearance can be enhanced by combining multiple layers:
+Layered styling helps establish the appearance of a polished glass object:
 
 ```css
 .liquid-glass {
@@ -220,31 +196,30 @@ The glass appearance can be enhanced by combining multiple layers:
   border: 1px solid rgba(255, 255, 255, 0.28);
 
   box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.18),
-    inset 0 -10px 24px rgba(0, 0, 0, 0.10),
-    inset 0 1px 4px rgba(255, 255, 255, 0.65);
+    0 8px 24px rgba(0, 0, 0, 0.18),
+    inset 0 -8px 24px rgba(0, 0, 0, 0.10),
+    inset 0 1px 3px rgba(255, 255, 255, 0.65);
 
-  backdrop-filter: blur(8px) saturate(1.2);
-  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  backdrop-filter: blur(10px) saturate(1.25);
+  -webkit-backdrop-filter: blur(10px) saturate(1.25);
 }
 ```
 
-This CSS is a lightweight visual fallback, not a substitute for the studio's full refraction implementation.
+These styles demonstrate the lighting layer. They provide a visual fallback rather than reproducing the complete displacement-based effect.
 
-> [!IMPORTANT]
-> SVG filter behavior on backdrops varies across browser engines. Test the actual refraction effect in your target browsers rather than assuming that every browser supports the same filter pipeline.
+**Rendering note:** Browser support for SVG filters, backdrop filtering, and their combination varies. The visual result depends on the rendering engine, GPU, filter configuration, and underlying content.
 
 ---
 
-## 🚀 Quick Start
+## 05 — Getting Started
 
-### Prerequisites
+### Requirements
 
 - Git
 - Node.js and npm for the included local server
-- A modern browser such as Chrome, Edge, Safari, or Firefox
+- A modern web browser
 
-### 1. Clone the repository
+### Clone the repository
 
 ```bash
 git clone https://github.com/tylonmademe-1/liquid-glass-studio.git
@@ -252,279 +227,219 @@ git clone https://github.com/tylonmademe-1/liquid-glass-studio.git
 cd liquid-glass-studio
 ```
 
-### 2. Start the local server
+### Start the local server
 
 ```bash
 npm start
 ```
 
-Alternatively, run the server directly:
+Alternatively:
 
 ```bash
 node server.mjs
 ```
 
-If your local server uses port `3000`, open:
+If the server uses port `3000`, visit:
 
-**http://localhost:3000**
+`http://localhost:3000`
 
-> [!TIP]
-> If you only want to inspect the static interface, you may be able to open `index.html` directly in a browser. Some functionality may require the local server, depending on how assets and browser APIs are used.
+For static inspection, you may also open `index.html` directly in a browser. Features that depend on server behavior may not work in that mode.
 
-### 3. Explore the studio
+### First-time workflow
 
-1. Open the interactive workspace.
-2. Select a template or glass element.
-3. Adjust the optical parameters.
-4. Experiment with window positioning and wallpapers.
-5. Open the code-generation panel.
-6. Copy the generated code and adapt it to your project.
-
----
-
-## 🌐 Deployment
-
-LiquidGlass Studio can be hosted as a static website using GitHub Pages, provided the deployed application does not require server-side functionality.
-
-### GitHub Pages setup
-
-1. Push the project to your GitHub repository.
-2. Open **Settings → Pages**.
-3. Select **GitHub Actions** as the deployment source.
-4. Confirm that `.github/workflows/deploy.yml` exists and contains a valid deployment workflow.
-5. Wait for the workflow to complete.
-6. Open the deployed website.
-
-Live demo:
-
-**https://tylonmademe-1.github.io/liquid-glass-studio/**
-
-If you fork the repository, update the demo URL and repository links to match your own GitHub username and repository name.
+1. Open the studio and select an available template.
+2. Choose a glass element to customize.
+3. Adjust dimensions, corner radius, distortion, and lighting.
+4. Preview the result against different backgrounds.
+5. Open the code-generation interface.
+6. Export the markup and styles, then integrate them into your application.
 
 ---
 
-## 📦 Templates
+## 06 — Curated Templates
 
-Use the available templates as starting points for building your own interfaces.
+The studio provides starting points for common glass-inspired interface patterns.
 
 <table>
 <tr>
 <th>Template</th>
-<th>Description</th>
-<th>Ideal use</th>
+<th>Design characteristics</th>
+<th>Use cases</th>
 </tr>
 <tr>
-<td><strong>🍎 macOS Dock</strong></td>
-<td>Floating glass bar with rounded application icons and hover magnification.</td>
-<td>Desktop-inspired navigation</td>
+<td><strong>macOS Dock</strong></td>
+<td>Translucent floating bar, rounded icons, hover magnification</td>
+<td>Desktop-inspired interfaces</td>
 </tr>
 <tr>
-<td><strong>🧭 Floating Navbar</strong></td>
-<td>Rounded glass navigation with links, a search field, and subtle edge highlights.</td>
-<td>Modern websites and dashboards</td>
+<td><strong>Floating Navbar</strong></td>
+<td>Rounded navigation, search field, subtle optical highlights</td>
+<td>Websites and dashboards</td>
 </tr>
 <tr>
-<td><strong>🎴 Frosted Card</strong></td>
-<td>Glass card with image content, typography, and a translucent toolbar.</td>
-<td>Landing pages and product interfaces</td>
+<td><strong>Frosted Card</strong></td>
+<td>Translucent surface, image content, typography, toolbar</td>
+<td>Landing pages and content panels</td>
 </tr>
 </table>
 
----
-
-## 🛠️ Code Export
-
-The studio's code generator is intended to help you transfer your experiments into a real project.
-
-### Suggested integration workflow
-
-1. Configure your glass element in the studio.
-2. Open the **Generate HTML/CSS** panel.
-3. Copy the generated markup and styles.
-4. Add any required SVG filter definitions.
-5. Integrate the element into your existing layout.
-6. Test it against different backgrounds and viewport sizes.
-
-### Example: reusable glass component
-
-```html
-<svg
-  aria-hidden="true"
-  width="0"
-  height="0"
-  style="position: absolute; overflow: hidden"
->
-  <defs>
-    <filter
-      id="liquid-glass"
-      color-interpolation-filters="sRGB"
-    >
-      <feGaussianBlur
-        in="SourceGraphic"
-        stdDeviation="0.5"
-        result="softened"
-      />
-      <feComponentTransfer in="softened">
-        <feFuncA type="identity" />
-      </feComponentTransfer>
-    </filter>
-  </defs>
-</svg>
-
-<div class="glass-panel">
-  <h2>Liquid Glass</h2>
-  <p>Build interfaces that play with light and depth.</p>
-</div>
-```
-
-```css
-.glass-panel {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-
-  padding: 2rem;
-  border-radius: 28px;
-
-  color: white;
-  background: rgba(255, 255, 255, 0.10);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-
-  box-shadow:
-    0 12px 36px rgba(0, 0, 0, 0.18),
-    inset 0 1px 1px rgba(255, 255, 255, 0.45);
-
-  backdrop-filter: blur(14px) saturate(1.35);
-  -webkit-backdrop-filter: blur(14px) saturate(1.35);
-
-  transition:
-    background 240ms ease,
-    border-color 240ms ease,
-    box-shadow 240ms ease,
-    transform 240ms ease;
-}
-
-.glass-panel:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.38);
-  box-shadow:
-    0 18px 48px rgba(0, 0, 0, 0.22),
-    inset 0 1px 2px rgba(255, 255, 255, 0.55);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .glass-panel {
-    transition: none;
-  }
-}
-```
-
-**Important:** This is a standalone glassmorphism example. It demonstrates frosted glass and smooth hover transitions; it does not reproduce the studio's full dynamic refraction engine. Use the generator's actual output when you need the complete implementation.
+Use these templates as a foundation for experimenting with surface geometry, spacing, and lighting rather than as rigid design systems.
 
 ---
 
-## ⌨️ Keyboard Shortcuts
+## 07 — Code Export & Integration
+
+The code-generation interface is designed to help move visual experiments from the studio into a website or application.
+
+### Recommended integration process
+
+1. Configure the desired effect in the studio.
+2. Adjust the relevant optical settings.
+3. Generate and copy the HTML/CSS.
+4. Include any required SVG definitions and supporting assets.
+5. Adapt the component to your layout and design system.
+6. Test the result in the browsers and viewports you support.
+
+Generated snippets may require integration-specific adjustments. In particular, displacement filters and backdrop sampling should be tested in the actual target environment.
+
+### Integration considerations
+
+- Avoid duplicate SVG filter IDs when using multiple instances.
+- Keep filter regions appropriately sized.
+- Provide fallback styles for unsupported effects.
+- Respect reduced-motion preferences.
+- Check contrast and readability over complex backgrounds.
+
+---
+
+## 08 — Keyboard Shortcuts
 
 | Shortcut | Action |
-|:--|:--|
-| `⌘ K` / `Ctrl + K` | Open the Spotlight-style search, if enabled |
-| `Esc` | Close the active modal or dialog, if supported |
+|---|---|
+| `Ctrl + K` / `⌘ K` | Open Spotlight-style search, when supported |
+| `Esc` | Close the active modal or dialog, when supported |
 
 ---
 
-## ⚡ Performance & Compatibility
+## 09 — Technology Stack
 
-The project is designed around native web technologies rather than a large rendering framework.
+<table>
+<tr>
+<th>Technology</th>
+<th>Responsibility</th>
+</tr>
+<tr>
+<td>HTML5</td>
+<td>Document structure and interface components</td>
+</tr>
+<tr>
+<td>CSS3</td>
+<td>Layout, visual styling, lighting, and transitions</td>
+</tr>
+<tr>
+<td>Vanilla JavaScript</td>
+<td>Application interactions and control logic</td>
+</tr>
+<tr>
+<td>SVG Filters</td>
+<td>Displacement and image-processing effects</td>
+</tr>
+<tr>
+<td>Canvas, where used</td>
+<td>Procedural surface-map generation</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>Local development server</td>
+</tr>
+<tr>
+<td>GitHub Actions</td>
+<td>Automated deployment workflow</td>
+</tr>
+</table>
 
-For smoother interactions:
+The core application is designed to operate without a frontend framework. The development server and deployment workflow may have separate requirements.
 
-- Update expensive effects only when their inputs change.
-- Avoid rebuilding large surface maps unnecessarily.
-- Use `requestAnimationFrame` for animation loops where appropriate.
-- Limit expensive SVG filter regions to the area that needs processing.
+---
+
+## 10 — Deployment
+
+LiquidGlass Studio can be deployed through GitHub Pages if the application is compatible with static hosting.
+
+1. Push the project to GitHub.
+2. Open **Settings → Pages**.
+3. Select **GitHub Actions** as the deployment source.
+4. Verify the repository's `.github/workflows/deploy.yml`.
+5. Confirm that the workflow completes successfully.
+6. Open the published site.
+
+**Live deployment:** [tylonmademe-1.github.io/liquid-glass-studio](https://tylonmademe-1.github.io/liquid-glass-studio/)
+
+For forks, update the repository URLs and deployment configuration as necessary.
+
+---
+
+## 11 — Performance & Compatibility
+
+Liquid-glass effects can be computationally expensive, especially when large filter regions are updated continuously.
+
+Recommended practices:
+
+- Use `requestAnimationFrame` for appropriate animation loops.
 - Avoid unnecessary layout reads and writes during pointer movement.
+- Reuse procedural maps when their inputs have not changed.
+- Minimize expensive filter regions and redundant processing.
+- Provide a conventional CSS fallback.
 - Respect `prefers-reduced-motion`.
-- Provide a conventional CSS fallback when advanced filtering is unsupported.
 
-Actual frame rates depend on the browser, GPU, filter complexity, display resolution, and the number of active effects. A fixed frame rate cannot be guaranteed on every device.
-
----
-
-## 🧰 Technology Stack
-
-| Technology | Role |
-|:--|:--|
-| HTML5 | Structure and interface |
-| CSS3 | Layout, lighting, transitions, and glass styling |
-| Vanilla JavaScript | Interaction and controls |
-| SVG filters | Image displacement and filter processing |
-| Canvas, where used | Procedural surface-map generation |
-| Node.js | Local development server |
-| GitHub Actions | Automated deployment workflow |
-
-**Dependencies:** The core interface is designed to run without a frontend framework. The local server and deployment workflow have their own runtime requirements.
+Performance varies by hardware, browser, viewport resolution, and the complexity of active effects. A specific frame rate cannot be guaranteed across devices.
 
 ---
 
-## 🗺️ Project Roadmap
+## 12 — Roadmap
 
-Potential improvements for future releases:
+Potential areas for future development:
 
-- [ ] Expand the template collection.
-- [ ] Add more optical presets and one-click reset controls.
-- [ ] Improve browser-specific refraction fallbacks.
-- [ ] Add a dedicated mobile-friendly control layout.
-- [ ] Introduce additional surface shapes and customizable lighting.
+- [ ] Expand the collection of glass interface templates.
+- [ ] Add more optical presets and configuration options.
+- [ ] Improve cross-browser rendering fallbacks.
+- [ ] Refine mobile workspace usability.
+- [ ] Introduce additional surface geometries and lighting controls.
 - [ ] Expand export options and implementation examples.
-- [ ] Add performance diagnostics for complex effects.
-- [ ] Improve keyboard accessibility and reduced-motion support.
+- [ ] Improve accessibility and reduced-motion support.
+- [ ] Add tools for evaluating rendering performance.
 
-These are roadmap ideas, not claims that the features are already implemented.
+*Roadmap items describe potential improvements and are not claims of existing functionality.*
 
 ---
 
-## 🤝 Contributing
+## 13 — Contributing
 
-Contributions, ideas, and bug reports are welcome.
-
-### How to contribute
+Contributions, bug reports, and suggestions are welcome.
 
 1. Fork the repository.
-2. Create a feature branch.
-3. Make a focused change.
-4. Test the experience in a browser.
-5. Open a pull request describing the change.
+2. Create a dedicated branch for your changes.
+3. Implement and test the proposed improvement.
+4. Submit a pull request with a clear description.
 
-For bugs, include your browser, operating system, reproduction steps, and a screenshot or short recording when possible.
-
-Please keep contributions consistent with the project's core goals: a lightweight implementation, a polished interface, and accessible developer tooling.
+For bug reports, include the browser, operating system, reproduction steps, and screenshots when relevant.
 
 ---
 
-## 📄 License
+## 14 — License
 
-LiquidGlass Studio is released under the **MIT License**.
-
-See [`LICENSE`](LICENSE) for the complete license text.
-
-You are free to use, modify, and distribute the project in accordance with the license terms.
+This project is distributed under the **MIT License**. See [`LICENSE`](LICENSE) for the complete license terms.
 
 ---
 
 <div align="center">
 
-## 💎 Build something that bends light.
+### LiquidGlass Studio
 
-Experiment with surfaces. Refine the details. Create interfaces that feel tangible.
+**A workspace for exploring light, depth, and modern interface design.**
 
-<p>
-  <a href="https://tylonmademe-1.github.io/liquid-glass-studio/">
-    <img src="https://img.shields.io/badge/OPEN_LIQUIDGLASS_STUDIO-7C6CFF?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Open LiquidGlass Studio" />
-  </a>
-</p>
+[Live Demo](https://tylonmademe-1.github.io/liquid-glass-studio/) · [GitHub Repository](https://github.com/tylonmademe-1/liquid-glass-studio)
 
-**Created by [tylonmademe](https://github.com/tylonmademe-1)**
-
-<sub>Designed for curious developers and people who love beautiful interfaces.</sub>
+Created by [tylonmademe](https://github.com/tylonmademe-1)
 
 </div>
