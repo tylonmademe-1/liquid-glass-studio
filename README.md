@@ -1,6 +1,6 @@
  <div align="center">
 
-# 💧 LiquidGlass Studio
+#  LiquidGlass Studio
 
 ### A new dimension of glass on the web.
 
