@@ -1,0 +1,22 @@
+{
+  "name": "liquid-glass-studio",
+  "version": "1.0.0",
+  "description": "High-fidelity interactive Liquid Glass refraction generator and macOS-style desktop studio",
+  "main": "server.mjs",
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node server.mjs"
+  },
+  "keywords": [
+    "liquid-glass",
+    "glassmorphism",
+    "refraction",
+    "displacement-map",
+    "svg-filter",
+    "webgl",
+    "macos"
+  ],
+  "author": "tylonmademe",
+  "license": "MIT"
+}

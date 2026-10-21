@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LiquidGlass Studio — Physical Refraction Engine & macOS Glass OS</title>
+  <link rel="icon" type="image/svg+xml" href="/logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-slate-900: #0f172a;
+      --bg-slate-800: #1e293b;
+      --glass-panel-bg: rgba(255, 255, 255, 0.25);
+      --glass-window-bg: rgba(248, 250, 252, 0.60);
+      --glass-border: rgba(248, 250, 252, 0.60);
+      --glass-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      --blue-btn-gradient: linear-gradient(to bottom, #3b82f6, #2563eb);
+      --blue-btn-hover: linear-gradient(to bottom, #2563eb, #1d4ed8);
+      --text-slate-900: #0f172a;
+      --text-slate-800: #1e293b;
+      --text-slate-700: #334155;
+      --text-slate-600: #475569;
+      --text-slate-400: #94a3b8;
+    }
+
+    /* =========================================================
+       TYPOGRAPHY DESIGN SYSTEM (100% Matching liquid-glass-pi)
+       ========================================================= */
+    .font-pop { font-family: 'Poppins', sans-serif !important; }
+    .font-sans { font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important; }
+    .font-mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important; }
+
+    .font-light { font-weight: 300 !important; }
+    .font-normal { font-weight: 400 !important; }
+    .font-medium { font-weight: 500 !important; }
+    .font-semibold { font-weight: 600 !important; }
+    .font-bold { font-weight: 700 !important; }
+
+    .text-xs { font-size: 0.75rem !important; line-height: 1rem !important; }
+    .text-sm { font-size: 0.875rem !important; line-height: 1.25rem !important; }
+    .text-lg { font-size: 1.125rem !important; line-height: 1.75rem !important; }
+    .text-2xl { font-size: 1.5rem !important; line-height: 2rem !important; }
+    .text-3xl { font-size: 1.875rem !important; line-height: 2.25rem !important; }
+    .text-\[0\.7rem\] { font-size: 0.7rem !important; line-height: 1rem !important; }
+
+    .text-slate-400 { color: #94a3b8 !important; }
+    .text-slate-600 { color: #475569 !important; }
+    .text-slate-700 { color: #334155 !important; }
+    .text-slate-800 { color: #1e293b !important; }
+    .text-slate-900 { color: #0f172a !important; }
+    .text-slate-950 { color: #020617 !important; }
+    .text-blue-400 { color: #60a5fa !important; }
+    .text-white { color: #ffffff !important; }
+
+    .text-center { text-align: center !important; }
+    .text-left { text-align: left !important; }
+    .text-right { text-align: right !important; }
+    .whitespace-nowrap { white-space: nowrap !important; }
+
+    .text-shadow-xs { text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15) !important; }
+    .text-shadow-slate-800\/60 { text-shadow: 0 1px 2px rgba(30, 41, 59, 0.6) !important; }
+    .text-shadow-md { text-shadow: 0 2px 4px rgba(71, 85, 105, 0.8) !important; }
+    .text-shadow-slate-600\/80 { text-shadow: 0 2px 4px rgba(71, 85, 105, 0.8) !important; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-slate-900);
+      color: #ffffff;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+
+
+    /* Buttons */
+    .btn-blue {
+      padding: 5px 14px;
+      border-radius: 7px;
+      background: var(--blue-btn-gradient);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+      transition: all 0.15s ease;
+      text-decoration: none;
+      font-family: inherit;
+    }
+    .btn-blue:hover {
+      background: var(--blue-btn-hover);
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.4);
+    }
+    .btn-blue:active {
+      transform: scale(0.98);
+    }
+
+    .btn-outline {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.16);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Main Container */
+    .app-main {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+    }
+
+    /* =========================================================
+       DESKTOP ENVIRONMENT (Exact matching liquid-glass-pi)
+       ========================================================= */
+    #desktop-viewport {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background-size: cover;
+      background-position: center;
+      transition: background-image 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Cross-fade wallpaper backdrop */
+    .wallpaper-crossfade {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .wallpaper-crossfade.fading {
+      opacity: 1;
+    }
+
+    /* Draggable Desktop Icons (Left vertical column, movable with cursor, matching target m component) */
+    .desktop-icon-item {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      width: 76px;
+      padding: 8px 4px;
+      border-radius: 12px;
+      cursor: grab;
+      user-select: none;
+      transition: background 0.15s;
+      z-index: 10;
+    }
+    .desktop-icon-item:active {
+      cursor: grabbing;
+    }
+    .desktop-icon-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+    }
+    .desktop-icon-item.selected {
+      background: rgba(59, 130, 246, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .desktop-icon-img {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+      pointer-events: none;
+    }
+    .desktop-icon-label {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #ffffff;
+      padding: 2px 6px;
+      border-radius: 8px;
+      text-shadow: 0 1px 2px rgba(30, 41, 59, 0.6);
+      text-align: center;
+      pointer-events: none;
+      line-height: 1rem;
+      transition: background-color 0.15s;
+    }
+    .desktop-icon-item.selected .desktop-icon-label,
+    .desktop-icon-item:active .desktop-icon-label {
+      background: rgba(0, 91, 215, 0.9);
+    }
+
+    /* Draggable macOS Windows (100% exact match to bg-slate-50/60 backdrop-blur-3xl rounded-2xl border border-slate-50/60 shadow-xl) */
+    .macos-window {
+      position: absolute;
+      background: rgba(248, 250, 252, 0.60);
+      backdrop-filter: blur(64px);
+      -webkit-backdrop-filter: blur(64px);
+      border: 1px solid rgba(248, 250, 252, 0.60);
+      border-radius: 16px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+      color: var(--text-slate-900);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 0.18s, transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 100;
+    }
+    .macos-window.hidden {
+      display: none;
+    }
+    .macos-window.minimized {
+      transform: scale(0.6) translateY(300px);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Left Frosted Soft-Glass Sidebar (matching w-1/4 rounded-xl border-1 m-1 border-white/60) */
+    .window-sidebar {
+      width: 25%;
+      min-width: 175px;
+      margin: 4px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.60);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 16px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .window-header {
+      height: 56px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.30);
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      background: transparent;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .window-header:active {
+      cursor: grabbing;
+    }
+
+    .single-window-header {
+      height: 56px;
+      padding-left: 24px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+      cursor: grab;
+      user-select: none;
+      -webkit-user-select: none;
+      background: transparent;
+    }
+    .single-window-header:active {
+      cursor: grabbing;
+    }
+
+    .traffic-lights {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .traffic-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s;
+    }
+    .traffic-dot:hover {
+      transform: scale(1.15);
+    }
+    .dot-close { background: #ff5f56; border: 1px solid #e0443e; }
+    .dot-min { background: #ffbd2e; border: 1px solid #dea123; }
+    .dot-max { background: #27c93f; border: 1px solid #1aab29; }
+
+    .window-title-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      color: var(--text-slate-800);
+    }
+    .window-title-icon {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    .window-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      font-size: 0.84rem;
+      color: var(--text-slate-700);
+    }
+
+    /* Custom Customize & Templates Window Tab Buttons */
+    .sidebar-tab-btn,
+    .custom-tab-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      margin: 2px 8px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: left;
+      width: calc(100% - 16px);
+    }
+    .sidebar-tab-btn:hover,
+    .custom-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.30);
+    }
+    .sidebar-tab-btn.active,
+    .custom-tab-btn.active {
+      background: rgba(255, 255, 255, 0.60);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    /* =========================================================
+       CUSTOMIZE GLASS SLIDERS (Matching function u(e) from page.js)
+       ========================================================= */
+    .capsule-slider-row {
+      display: grid;
+      grid-template-columns: 20% 80%;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 7px 0;
+    }
+    .capsule-slider-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #334155;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-align: right;
+      white-space: nowrap;
+      font-family: 'Poppins', sans-serif;
+    }
+    .capsule-track-container {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+    }
+    .capsule-track {
+      position: relative;
+      width: 320px;
+      max-width: 100%;
+      height: 10px;
+      background: #D6D6DA;
+      border-radius: 9999px;
+      cursor: pointer;
+      touch-action: none;
+      outline: none;
+    }
+    .capsule-track:focus-visible {
+      box-shadow: 0 0 0 2px #3b82f6;
+    }
+    .capsule-filled-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(117deg, #49a3fc 0%, #3681ee 100%);
+      pointer-events: none;
+    }
+    .capsule-thumb {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.75);
+      width: 65px;
+      height: 42px;
+      border-radius: 9999px;
+      background: #ffffff;
+      box-shadow: 0 1px 8px rgba(0, 30, 63, 0.1), 0 0 2px rgba(0, 9, 20, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      user-select: none;
+      overflow: hidden;
+      transition: transform 0.15s ease-out, background-color 0.15s, box-shadow 0.15s;
+      touch-action: none;
+    }
+    .capsule-thumb:active, .capsule-thumb.active {
+      cursor: grabbing;
+      transform: translate(-50%, -50%) scale(0.75) scaleX(1.10) scaleY(0.98);
+      background: transparent;
+      box-shadow: none;
+    }
+    .capsule-thumb-text {
+      position: relative;
+      z-index: 99;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 500;
+      color: #334155;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: color 0.15s, text-shadow 0.15s;
+    }
+    .capsule-thumb.active .capsule-thumb-text {
+      color: #ffffff;
+      text-shadow: 0 2px 5px rgba(30, 41, 59, 0.8);
+    }
+    .capsule-thumb-lens {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      opacity: 0;
+      pointer-events: none;
+      backdrop-filter: blur(0.6px);
+      -webkit-backdrop-filter: blur(0.6px);
+      transition: opacity 0.15s ease-out;
+    }
+    .capsule-thumb.active .capsule-thumb-lens {
+      opacity: 1;
+    }
+    .capsule-thumb-tint {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      opacity: 0;
+      pointer-events: none;
+      background: rgba(255, 255, 255, 0.10);
+      z-index: 10;
+      transition: opacity 0.15s ease-out;
+    }
+    .capsule-thumb.active .capsule-thumb-tint {
+      opacity: 1;
+    }
+    .capsule-thumb-rim {
+      position: absolute;
+      inset: 0;
+      border-radius: 9999px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 20;
+      box-shadow:
+        inset 1px 1px 0 rgba(69, 168, 243, 0.2),
+        inset 1px 3px 0 rgba(28, 63, 90, 0.05),
+        inset 0 0 22px rgba(255, 255, 255, 0.6),
+        inset -1px -1px 0 rgba(69, 168, 243, 0.12);
+      transition: opacity 0.15s ease-out;
+    }
+    .capsule-thumb.active .capsule-thumb-rim {
+      opacity: 1;
+    }
+
+    /* Window: Templates */
+    .templates-layout {
+      display: flex;
+      height: 420px;
+      overflow: hidden;
+      background: transparent;
+    }
+    .templates-sidebar {
+      width: 25%;
+      min-width: 175px;
+      margin: 4px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.60);
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 16px;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .template-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 12px;
+      margin: 2px 8px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: left;
+      width: calc(100% - 16px);
+    }
+    .template-nav-btn:hover {
+      background: rgba(255, 255, 255, 0.30);
+    }
+    .template-nav-btn.active {
+      background: rgba(255, 255, 255, 0.60);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    .template-detail-pane {
+      flex: 1;
+      padding: 16px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: transparent;
+      overflow-y: auto;
+    }
+    .template-preview-box {
+      height: 140px;
+      width: 100%;
+      border: 1px dashed rgba(148, 163, 184, 0.60);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Window: Wallpaper (matching function O in page.js) */
+    .wallpaper-cards-row {
+      display: flex;
+      position: relative;
+      flex-direction: row;
+      gap: 8px;
+      margin: 16px 0;
+      justify-content: center;
+      align-items: center;
+    }
+    .wallpaper-card {
+      width: 64px;
+      height: 48px;
+      border-radius: 12px;
+      padding: 3px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.50);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .wallpaper-card:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+    }
+    .wallpaper-card.active {
+      border: 2px solid #60a5fa;
+      box-shadow: 0 0 14px rgba(96, 165, 250, 0.55);
+    }
+    .wallpaper-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 9px;
+    }
+
+    /* Window: About */
+    .about-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+      padding: 10px 20px;
+    }
+    .about-big-icon {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.15));
+    }
+    .about-table {
+      display: grid;
+      grid-template-columns: auto auto;
+      gap: 8px 18px;
+      font-size: 0.8rem;
+      margin-top: 10px;
+    }
+    .about-label {
+      font-weight: 600;
+      color: var(--text-slate-800);
+      text-align: right;
+    }
+    .about-val {
+      color: var(--text-slate-600);
+      text-align: left;
+    }
+
+    img, svg {
+      -webkit-user-drag: none;
+      user-drag: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    /* =========================================================
+       THE PHYSICAL LIQUID GLASS LENS
+       ========================================================= */
+    #liquid-glass-lens {
+      position: fixed;
+      top: 240px;
+      left: calc(100vw - 420px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: grab;
+      z-index: 9999;
+      pointer-events: auto;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    body.capsule-dragging #liquid-glass-lens {
+      pointer-events: none !important;
+    }
+    #liquid-glass-lens:active {
+      cursor: grabbing;
+    }
+    #liquid-glass-lens-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: auto;
+    }
+
+    /* =========================================================
+       STUDIO SIDEBAR (For Studio Inspector Mode)
+       ========================================================= */
+    #studio-sidebar {
+      width: 380px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      display: none;
+      flex-direction: column;
+      z-index: 500;
+      overflow: hidden;
+    }
+    #studio-sidebar.visible {
+      display: flex;
+    }
+
+    .control-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .control-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #e2e8f0;
+    }
+    .control-num-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: #60a5fa;
+      background: rgba(59, 130, 246, 0.15);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .macos-range {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      outline: none;
+      cursor: pointer;
+    }
+    .macos-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: 1px solid #ffffff;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+
+    /* =========================================================
+       SPOTLIGHT SEARCH MODAL (Ctrl+K / ⌘K)
+       ========================================================= */
+    .spotlight-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 20000;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 14vh;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .spotlight-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .spotlight-box {
+      width: 580px;
+      max-width: 90vw;
+      background: rgba(24, 30, 44, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      animation: popIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.96) translateY(-10px); }
+      to { transform: scale(1) translateY(0); }
+    }
+
+    .spotlight-search-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .spotlight-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-family: inherit;
+      outline: none;
+    }
+    .spotlight-results {
+      max-height: 360px;
+      overflow-y: auto;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .spotlight-result-item {
+      padding: 10px 14px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .spotlight-result-item:hover, .spotlight-result-item.highlighted {
+      background: rgba(59, 130, 246, 0.25);
+    }
+    .spotlight-footer {
+      padding: 10px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.72rem;
+      color: var(--text-slate-400);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Modal dialogs */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(12px);
+      z-index: 25000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-card {
+      width: 720px;
+      max-width: 92vw;
+      max-height: 85vh;
+      background: #141c2e;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .code-tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .code-tab-btn {
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-slate-400);
+      font-size: 0.76rem;
+      cursor: pointer;
+    }
+    .code-tab-btn.active {
+      background: #3b82f6;
+      color: #fff;
+      border-color: #3b82f6;
+    }
+    .code-pre {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      color: #cbd5e1;
+      overflow-x: auto;
+      max-height: 340px;
+      user-select: text;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: rgba(16, 185, 129, 0.9);
+      backdrop-filter: blur(12px);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      z-index: 30000;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+
+
+  <!-- Main Viewport -->
+  <main class="app-main">
+
+    <!-- Studio Sidebar (Inspector View) -->
+    <aside id="studio-sidebar">
+      <div style="padding: 14px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: space-between;">
+        <span style="font-weight: 600; font-size: 0.84rem; color: #cbd5e1;">Studio Inspector</span>
+        <button class="btn-outline" style="padding: 3px 8px; font-size: 0.72rem;" onclick="resetDefaults()">Reset</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; color: var(--text-slate-400);">Lens Geometry</div>
+        <div class="control-item">
+          <div class="control-label-row">
+            <span>Width</span>
+            <span class="control-num-badge" id="studio-w-val">300px</span>
+          </div>
+          <input type="range" class="macos-range" id="studio-w" min="10" max="1000" value="300" oninput="syncSetting('w', +this.value)">
+        </div>
+        <div class="control-item">
+          <div class="control-label-row">
+            <span>Height</span>
+            <span class="control-num-badge" id="studio-h-val">200px</span>
+          </div>
+          <input type="range" class="macos-range" id="studio-h" min="10" max="1000" value="200" oninput="syncSetting('h', +this.value)">
+        </div>
+        <div class="control-item">
+          <div class="control-label-row">
+            <span>Corner Radius</span>
+            <span class="control-num-badge" id="studio-r-val">100px</span>
+          </div>
+          <input type="range" class="macos-range" id="studio-r" min="0" max="100" value="100" oninput="syncSetting('r', +this.value)">
+        </div>
+
+        <div style="font-size: 0.72rem; font-weight: 600; text-transform: uppercase; color: var(--text-slate-400); margin-top: 10px;">Refraction & Optics</div>
+        <div class="control-item">
+          <div class="control-label-row">
+            <span>Distortion (Centerdist)</span>
+            <span class="control-num-badge" id="studio-c1-val">1.00</span>
+          </div>
+          <input type="range" class="macos-range" id="studio-c1" min="0.5" max="5.0" step="0.01" value="1.0" oninput="syncSetting('c1', +this.value)">
+        </div>
+        <div class="control-item">
+          <div class="control-label-row">
+            <span>Post-Blur</span>
+            <span class="control-num-badge" id="studio-b2-val">0.25px</span>
+          </div>
+          <input type="range" class="macos-range" id="studio-b2" min="0.25" max="20" step="0.1" value="0.25" oninput="syncSetting('b2', +this.value)">
+        </div>
+        <div class="control-item">
+          <div class="control-label-row">
+            <span>Brightness</span>
+            <span class="control-num-badge" id="studio-d1-val">1.50</span>
+          </div>
+          <input type="range" class="macos-range" id="studio-d1" min="0.5" max="10" step="0.1" value="1.5" oninput="syncSetting('d1', +this.value)">
+        </div>
+        <div class="control-item">
+          <div class="control-label-row">
+            <span>Saturation</span>
+            <span class="control-num-badge" id="studio-d2-val">1.10</span>
+          </div>
+          <input type="range" class="macos-range" id="studio-d2" min="0.1" max="10" step="0.1" value="1.1" oninput="syncSetting('d2', +this.value)">
+        </div>
+      </div>
+    </aside>
+
+    <!-- Desktop Viewport -->
+    <div id="desktop-viewport" style="background-image: url('./assets/Wall1.f0d07c34.jpg');">
+      
+      <!-- Cross-fade element for smooth wallpaper transitions -->
+      <div id="wallpaper-crossfade" class="wallpaper-crossfade"></div>
+
+      <!-- Draggable Desktop Icons (Movable with cursor, matching target m component) -->
+      <div class="desktop-icon-item" id="desktop-icon-0" style="top: 24px; left: 28px;" title="Customize Glass Parameters">
+        <img class="desktop-icon-img" src="./assets/sett_icon.9fbddf2e.png" alt="Customize">
+        <span class="desktop-icon-label">Customize</span>
+      </div>
+      <div class="desktop-icon-item" id="desktop-icon-3" style="top: 120px; left: 28px;" title="Browse Curated Templates">
+        <img class="desktop-icon-img" src="./assets/template_ico.d4c7f1bb.png" alt="Templates">
+        <span class="desktop-icon-label">Templates</span>
+      </div>
+      <div class="desktop-icon-item" id="desktop-icon-2" style="top: 216px; left: 28px;" title="Switch Wallpaper">
+        <img class="desktop-icon-img" src="./assets/wallpaper_ico.49299bdb.png" alt="Wallpaper">
+        <span class="desktop-icon-label">Wallpaper</span>
+      </div>
+      <div class="desktop-icon-item" id="desktop-icon-1" style="top: 312px; left: 28px;" title="About Liquid Glass">
+        <img class="desktop-icon-img" src="./assets/about_ico.37b2ec1e.png" alt="About">
+        <span class="desktop-icon-label">About</span>
+      </div>
+
+      <!-- =========================================================
+           WINDOW 0: CUSTOMIZE (Exact implementation from page.js function g)
+           ========================================================= -->
+      <div class="macos-window" id="win-0" style="width: 672px; max-width: 90vw; top: 70px; left: 100px;">
+        <div style="display: flex; min-height: 490px; overflow: hidden; background: transparent;">
+          
+          <!-- Left Sidebar (Traffic lights + 3 Tabs: Customize, Content Inside, Generate HTML/CSS) -->
+          <div class="window-sidebar" onmousedown="startDragWindow(event, 0)">
+            <div style="height: 36px; padding-left: 12px; display: flex; align-items: center;">
+              <div class="traffic-lights">
+                <div class="traffic-dot dot-close" onclick="closeWindow(0)"></div>
+                <div class="traffic-dot dot-min" onclick="minimizeWindow(0)"></div>
+                <div class="traffic-dot dot-max" onclick="maximizeWindow(0)"></div>
+              </div>
+            </div>
+            <div style="padding: 4px 0; display: flex; flex-direction: column; gap: 2px;">
+              <button class="sidebar-tab-btn active" id="custom-tab-0" onclick="switchCustomTab(0)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                Customize
+              </button>
+              <button class="sidebar-tab-btn" id="custom-tab-1" onclick="switchCustomTab(1)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                Content Inside
+              </button>
+              <button class="sidebar-tab-btn" id="custom-tab-2" onclick="switchCustomTab(2)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                Generate HTML/CSS
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Content Area -->
+          <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden; background: transparent;">
+            <!-- Title bar with drag capability -->
+            <div class="window-header" onmousedown="startDragWindow(event, 0)">
+              <div id="custom-header-title" style="font-weight: 600; font-size: 0.92rem; color: #1e293b; font-family:'Poppins',sans-serif;">Customize Glass</div>
+              <div id="custom-header-actions" style="display: flex; gap: 8px;">
+                <button class="btn-blue" id="btn-custom-action-0" onclick="resetToCustomDefaults()" style="padding: 4px 16px; font-size: 0.76rem;">Default</button>
+                <button class="btn-blue" id="btn-custom-action-1" onclick="clearCustomContent()" style="padding: 4px 16px; font-size: 0.76rem; display: none;">Clear</button>
+                <div id="btn-custom-action-2-group" style="display: none; gap: 6px;">
+                  <button class="btn-blue" onclick="generateCustomCode()" style="padding: 4px 12px; font-size: 0.76rem;">Generate</button>
+                  <button class="btn-blue" id="btn-copy-custom" onclick="copyCustomCode()" style="padding: 4px 12px; font-size: 0.76rem;">Copy</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab 0: Customize Sliders with Capsule Thumb Components -->
+            <div id="custom-pane-0" style="flex: 1; overflow-y: auto; padding: 16px 24px; display: flex; flex-direction: column; align-items: center; background: transparent;">
+              <div id="capsule-sliders-container" style="width: 100%; max-width: 460px; display: flex; flex-direction: column; gap: 6px; margin: 12px 0;">
+                <!-- Dynamically populated capsule sliders for W, H, R, B2, D1, D2, C1 -->
+              </div>
+            </div>
+
+            <!-- Tab 1: Content Inside -->
+            <div id="custom-pane-1" style="flex: 1; overflow-y: auto; padding: 18px 22px; display: none; flex-direction: column; gap: 10px; background: transparent;">
+              <p style="font-size: 0.76rem; color: #475569; font-weight: 500;">Enter content to be placed inside the glass. HTML tags with inline CSS is also accepted.</p>
+              <textarea id="custom-content-textarea" placeholder="Enter HTML content here..." oninput="onCustomContentInput(this.value)" class="font-pop text-xs" style="flex: 1; min-height: 290px; width: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,0.60); background: rgba(255,255,255,0.40); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 12px; font-family: 'Poppins', sans-serif; font-size: 0.75rem; color: #0f172a; outline: none; resize: none; box-shadow: 0 2px 8px rgba(0,0,0,0.03);"></textarea>
+            </div>
+
+            <!-- Tab 2: Generate HTML/CSS -->
+            <div id="custom-pane-2" style="flex: 1; overflow-y: auto; padding: 18px 22px; display: none; flex-direction: column; gap: 10px; background: transparent;">
+              <p style="font-size: 0.76rem; color: #475569; font-weight: 500;">Press generate to generate the HTML/CSS code for your customized liquid glass effect.</p>
+              <textarea id="custom-code-textarea" readonly style="flex: 1; min-height: 290px; width: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,0.60); background: rgba(255,255,255,0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); padding: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: #0f172a; outline: none; resize: none; box-shadow: 0 2px 8px rgba(0,0,0,0.03);"></textarea>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- WINDOW 1: ABOUT (Matching function p and about content) -->
+      <div class="macos-window hidden" id="win-1" style="width: 384px; top: 120px; left: 380px;">
+        <div class="single-window-header" onmousedown="startDragWindow(event, 1)">
+          <div class="traffic-lights">
+            <div class="traffic-dot dot-close" onclick="closeWindow(1)"></div>
+            <div class="traffic-dot dot-min" onclick="minimizeWindow(1)"></div>
+            <div class="traffic-dot dot-max" onclick="maximizeWindow(1)"></div>
+          </div>
+        </div>
+        <div class="about-content" style="padding: 0 20px 24px;">
+          <img src="./assets/about_ico.37b2ec1e.png" alt="About" style="width: 140px; height: 140px; margin-top: -12px; object-fit: contain;">
+          <h1 class="text-3xl text-slate-700 font-semibold font-pop" style="margin-top: 2px; font-size: 1.75rem;">Liquid Glass Effect</h1>
+          <h1 class="text-[0.7rem] text-slate-700 font-light font-pop" style="font-size: 0.72rem; color: #475569;">Generate your own liquid glass effect</h1>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; margin: 16px auto; width: 100%; max-width: 340px; font-family: 'Poppins', sans-serif; font-size: 0.75rem;">
+            <h1 style="color: #1e293b; font-weight: 500; text-align: right;">Developer</h1>
+            <h1 style="color: #334155; font-weight: 300; text-align: left;">tylonmademe</h1>
+            <h1 style="color: #1e293b; font-weight: 500; text-align: right;">Website</h1>
+            <h1 onclick="window.open('https://ananthujp.vercel.app','_blank')" style="color: #2563eb; font-weight: 300; text-align: left; cursor: pointer; text-decoration: none;">ananthujp.vercel.app</h1>
+          </div>
+          <h1 class="text-[0.7rem] text-slate-700 font-light font-pop" style="font-size: 0.72rem; color: #64748b;">2026 © tylonmademe</h1>
+        </div>
+      </div>
+
+      <!-- WINDOW 2: WALLPAPER (Matching function p and O) -->
+      <div class="macos-window hidden" id="win-2" style="width: 384px; top: 140px; left: 340px;">
+        <div class="single-window-header" onmousedown="startDragWindow(event, 2)">
+          <div class="traffic-lights">
+            <div class="traffic-dot dot-close" onclick="closeWindow(2)"></div>
+            <div class="traffic-dot dot-min" onclick="minimizeWindow(2)"></div>
+            <div class="traffic-dot dot-max" onclick="maximizeWindow(2)"></div>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; padding: 0 20px 24px; text-align: center;">
+          <img src="./assets/wallpaper_ico.49299bdb.png" alt="Wallpaper" style="width: 140px; height: 140px; margin-top: -12px; object-fit: contain;">
+          <h1 class="text-3xl text-slate-700 font-semibold font-pop" style="margin-top: 2px; font-size: 1.75rem;">Wallpaper</h1>
+          <h1 class="text-[0.7rem] text-slate-700 font-light font-pop" style="font-size: 0.72rem; color: #475569; margin-top: 2px;">Change the wallpaper of the background</h1>
+          <div class="wallpaper-cards-row">
+            <div class="wallpaper-card active" id="wall-card-0" onclick="switchWallpaper(0)">
+              <img src="./assets/Wall1.f0d07c34.jpg" alt="Wall 1">
+            </div>
+            <div class="wallpaper-card" id="wall-card-1" onclick="switchWallpaper(1)">
+              <img src="./assets/Wall2.4071abaa.jpg" alt="Wall 2">
+            </div>
+            <div class="wallpaper-card" id="wall-card-2" onclick="switchWallpaper(2)">
+              <img src="./assets/Wall3.bca01824.jpg" alt="Wall 3">
+            </div>
+            <div class="wallpaper-card" id="wall-card-3" onclick="switchWallpaper(3)">
+              <img src="./assets/Wall4.33469f3a.jpg" alt="Wall 4">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- WINDOW 3: TEMPLATES (Matching function y) -->
+      <div class="macos-window hidden" id="win-3" style="width: 672px; max-width: 90vw; top: 100px; left: 240px;">
+        <div style="display: flex; min-height: 440px; overflow: hidden; background: transparent;">
+          
+          <!-- Left Sidebar (Traffic lights + 3 Template Tabs: Dock, Navigation Bar, Card) -->
+          <div class="window-sidebar" onmousedown="startDragWindow(event, 3)">
+            <div style="height: 36px; padding-left: 12px; display: flex; align-items: center;">
+              <div class="traffic-lights">
+                <div class="traffic-dot dot-close" onclick="closeWindow(3)"></div>
+                <div class="traffic-dot dot-min" onclick="minimizeWindow(3)"></div>
+                <div class="traffic-dot dot-max" onclick="maximizeWindow(3)"></div>
+              </div>
+            </div>
+            <div style="padding: 4px 0; display: flex; flex-direction: column; gap: 2px;">
+              <button class="sidebar-tab-btn active" id="tpl-nav-0" onclick="selectTemplateNav(0)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><rect x="2" y="14" width="20" height="8" rx="2"></rect><path d="M6 6h12"></path></svg>
+                Dock
+              </button>
+              <button class="sidebar-tab-btn" id="tpl-nav-1" onclick="selectTemplateNav(1)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><rect x="3" y="3" width="18" height="6" rx="2"></rect><line x1="3" y1="12" x2="21" y2="12"></line></svg>
+                Navigation Bar
+              </button>
+              <button class="sidebar-tab-btn" id="tpl-nav-2" onclick="selectTemplateNav(2)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="3"></rect><line x1="8" y1="6" x2="16" y2="6"></line></svg>
+                Card
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Content Area -->
+          <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden; background: transparent;">
+            <div class="window-header" onmousedown="startDragWindow(event, 3)">
+              <div id="tpl-header-title" style="font-weight: 600; font-size: 0.92rem; color: #1e293b; font-family:'Poppins',sans-serif;">Dock Template</div>
+              <button class="btn-blue" style="padding: 4px 16px; font-size: 0.76rem;" onclick="applyActiveTemplate()">Apply</button>
+            </div>
+            <div class="template-detail-pane">
+              <div class="template-preview-box" id="tpl-preview-box">
+                <!-- Live interactive mini preview matching function B and P -->
+              </div>
+              <div>
+                <h1 id="tpl-preview-title" class="text-sm font-pop font-semibold text-slate-700" style="font-size: 0.88rem;">Dock</h1>
+                <h1 id="tpl-preview-desc" class="text-xs font-pop text-slate-600" style="margin-top: 4px; line-height: 1.45; font-size: 0.76rem; color: #475569;">A macOS style dock, with a row of rounded app icons on a wide, shallow liquid glass bar. Press Apply to set the glass controls and content to this template.</h1>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- THE FLOATING DRAGGABLE LIQUID GLASS LENS -->
+      <div id="liquid-glass-lens">
+        <div id="liquid-glass-lens-inner"></div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- SVG FILTER ENGINE (Offscreen, dynamically linked) -->
+  <svg width="0" height="0" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1;">
+    <defs>
+      <filter id="liquid_glass_filter" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB" x="0" y="0" width="300" height="200">
+        <feImage id="fe_normal_map" width="300" height="200" result="normalMap" />
+        <feDisplacementMap in="SourceGraphic" in2="normalMap" scale="49" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+
+      <!-- Thumb Miniature Liquid Lens Fallback Filter (matching target mini-liquid-lens) -->
+      <filter id="mini-liquid-lens-filter" x="0" y="0" width="100%" height="100%" filterUnits="objectBoundingBox">
+        <feImage result="normalMap" preserveAspectRatio="xMidYMid meet" href="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'100%25'%20height%3D'100%25'%3E%3CradialGradient%20id%3D'invmap'%20cx%3D'50%25'%20cy%3D'50%25'%20r%3D'75%25'%3E%3Cstop%20offset%3D'0%25'%20stop-color%3D'rgb(128%2C128%2C255)'%2F%3E%3Cstop%20offset%3D'90%25'%20stop-color%3D'rgb(255%2C255%2C255)'%2F%3E%3C%2FradialGradient%3E%3Crect%20width%3D'100%25'%20height%3D'100%25'%20fill%3D'url(%23invmap)'%2F%3E%3C%2Fsvg%3E" />
+        <feDisplacementMap in="SourceGraphic" in2="normalMap" scale="-252" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Offscreen Canvas for Tangent Normal Generator -->
+  <canvas id="offscreen-normal-canvas" style="display: none;"></canvas>
+
+  <!-- SPOTLIGHT SEARCH MODAL (Ctrl+K) -->
+  <div class="spotlight-backdrop" id="spotlight-modal" onclick="handleSpotlightBackdropClick(event)">
+    <div class="spotlight-box">
+      <div class="spotlight-search-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2.2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="spotlight-input" class="spotlight-input" placeholder="Search templates, windows, settings, wallpapers..." autofocus oninput="onSpotlightInput(this.value)">
+        <span class="search-key-badge" style="position: static; font-size: 0.72rem;">ESC</span>
+      </div>
+      <div class="spotlight-results" id="spotlight-results"></div>
+      <div class="spotlight-footer">
+        <span>Use <kbd>↑</kbd> <kbd>↓</kbd> to navigate, <kbd>Enter</kbd> to select</span>
+        <span>LiquidGlass Spotlight Search</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE EXPORT MODAL -->
+  <div class="modal-backdrop" id="code-modal" onclick="if(event.target===this) closeCodeModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <div class="nav-logo-icon" style="width: 24px; height: 24px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <span style="font-weight: 600; font-size: 0.95rem;">Export Liquid Glass Code</span>
+        </div>
+        <button class="btn-outline" style="padding: 4px 10px;" onclick="closeCodeModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <div class="code-tabs">
+            <button class="code-tab-btn active" id="tab-html" onclick="setCodeTab('html')">HTML + SVG</button>
+            <button class="code-tab-btn" id="tab-react" onclick="setCodeTab('react')">React / Next.js</button>
+            <button class="code-tab-btn" id="tab-tailwind" onclick="setCodeTab('tailwind')">Tailwind CSS</button>
+          </div>
+          <button class="btn-blue" onclick="copyCurrentCode()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            Copy Snippet
+          </button>
+        </div>
+        <pre class="code-pre" id="code-output"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- REA EVIDENCE MODAL -->
+  <div class="modal-backdrop" id="evidence-modal" onclick="if(event.target===this) closeEvidenceModal()">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-weight: 700; font-size: 1rem; color: #38bdf8;">Reverse-Engineering Evidence (REA Analysis)</span>
+        </div>
+        <button class="btn-outline" style="padding: 4px 10px;" onclick="closeEvidenceModal()">✕</button>
+      </div>
+      <div class="modal-body" style="font-size: 0.8rem; line-height: 1.6; color: #cbd5e1;">
+        <h4 style="color: #60a5fa; margin-bottom: 4px;">Target Audit: https://liquid-glass-pi.vercel.app/#examples</h4>
+        <p style="margin-bottom: 12px;">Analyzed using REA tools (<code>rea analyze-javascript-application</code>) on bundle chunk <code>page-2772418492149736.js</code>.</p>
+        
+        <h5 style="color: #f8fafc; margin-top: 10px; font-weight: 600;">1. Physical Refraction Architecture</h5>
+        <p>The liquid glass illusion operates on a procedural 2D canvas normal-map generator coupled with an SVG <code>&lt;feDisplacementMap&gt;</code> and CSS <code>backdrop-filter</code>:</p>
+        <pre class="code-pre" style="margin: 8px 0;">function roundedRectSDF(t, s, n, r, a) {
+  let i = Math.abs(t) - n + a, o = Math.abs(s) - r + a;
+  return Math.min(Math.max(i, o), 0) + length(Math.max(i, 0), Math.max(o, 0)) - a;
+}</pre>
+        
+        <h5 style="color: #f8fafc; margin-top: 10px; font-weight: 600;">2. Tangent Normal Vector Encoding</h5>
+        <p>Deflections are mapped into 8-bit RGB channels: R = horizontal displacement ($dx$), G = vertical displacement ($dy$), B = 255 (neutral surface normal), Alpha = 255. The normal map is serialized as base64 and fed into <code>&lt;feImage&gt;</code>.</p>
+
+        <h5 style="color: #f8fafc; margin-top: 10px; font-weight: 600;">3. Recovered Template Catalog</h5>
+        <p>Extracted directly from array <code>w</code> in <code>function y(e)</code>:</p>
+        <ul style="padding-left: 20px; margin-top: 6px;">
+          <li><strong>Dock</strong>: <code>values: { h: 8, w: 45, r: 100, b2: 3, d1: 9, d2: 30, c1: 12 }</code></li>
+          <li><strong>Navigation Bar</strong>: <code>values: { h: 7, w: 100, r: 100, b2: 2, d1: 11, d2: 14, c1: 0 }</code></li>
+          <li><strong>Card</strong>: <code>values: { h: 45, w: 30, r: 9, b2: 9, d1: 5, d2: 19, c1: 34 }</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">Copied to clipboard!</div>
+
+  <script>
+    // State matching exact keys from function W() & function g() in target page.js
+    const state = {
+      w: 300,        // Width
+      h: 200,        // Height
+      r: 100,        // Radius (clamped to min(w, h)/2)
+      b2: 0.25,      // Post-blur
+      d1: 1.5,       // Brightness
+      d2: 1.1,       // Saturation
+      c1: 1.0,       // Distortion (centerdist)
+      rim: 74,       // Specular rim alpha (0.74 in target page.js)
+      content: '',   // Empty string: starts as pure clear liquid glass refraction lens
+      currentWallpaper: 0,
+      viewMode: 'desktop', // 'desktop' | 'studio'
+      activeTemplateIdx: 0,
+      activeCustomTab: 0, // 0: Customize, 1: Content Inside, 2: Generate HTML/CSS
+      mouseLensX: 0.5,
+      mouseLensY: 0.5
+    };
+
+    // Controls schema matching X = [...] in target liquid-glass-target/page.js
+    const CONTROLS = [
+      { id: 'w', label: 'Width', min: 10, max: 1000, step: 1 },
+      { id: 'h', label: 'Height', min: 10, max: 1000, step: 1 },
+      { id: 'r', label: 'Radius', min: 0, max: 100, step: 0.5 },
+      { id: 'b2', label: 'Post-blur', min: 0.25, max: 20, step: 0.1 },
+      { id: 'd1', label: 'Brightness', min: 0.5, max: 10, step: 0.1 },
+      { id: 'd2', label: 'Saturation', min: 0.1, max: 10, step: 0.1 },
+      { id: 'c1', label: 'Distortion', min: 0.5, max: 5.0, step: 0.01 }
+    ];
+
+    // Curated Templates recovered from liquid-glass-pi.vercel.app/page.js:103413
+    const TEMPLATES = [
+      {
+        id: 0,
+        name: 'Dock',
+        title: 'Dock Template',
+        desc: 'A macOS style dock, with a row of rounded app icons on a wide, shallow liquid glass bar. Press Apply to set the glass controls and content to this template.',
+        values: {
+          h: 8,
+          w: 45,
+          r: 100,
+          b2: 3,
+          d1: 9,
+          d2: 30,
+          c1: 12,
+          content: '<div style="display: flex; justify-content: center; background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border-radius: 15px; padding: 10px 20px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);">\n  <a href="#" style="margin: 0 10px; text-decoration: none;">\n    <img src="https://s3-new.macosicons.com/macosicons/parse/low_res_YouTube__Dark__Golden_Gate__TS1rpHpGhZ-c6b9d318d1.png" style="width: 64px; height: 64px; border-radius: 15px; transition: transform 0.3s ease; object-fit: cover;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'"></a>\n  <a href="#" style="margin: 0 10px; text-decoration: none;">\n    <img src="https://parsefiles.back4app.com/JPaQcFfEEQ1ePBxbf6wvzkPMEqKYHhPYv8boI1Rc/0d8939784e7192d5540548669cbffabf_low_res_Final_Cut.png" style="width: 64px; height: 64px; border-radius: 15px; transition: transform 0.3s ease; object-fit: cover;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'"></a>\n  <a href="#" style="margin: 0 10px; text-decoration: none;">\n    <img src="https://parsefiles.back4app.com/JPaQcFfEEQ1ePBxbf6wvzkPMEqKYHhPYv8boI1Rc/880bf964f1352d71af45f1893717e030_low_res_Visual_Studio_Code.png" style="width: 64px; height: 64px; border-radius: 15px; transition: transform 0.3s ease; object-fit: cover;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'"></a>\n  <a href="#" style="margin: 0 10px; text-decoration: none;">\n    <img src="https://s3-new.macosicons.com/macosicons/parse/low_res_Siri_Macos_Golden_Gate_27_y2kxuMTZ8n-5a25672169.png" style="width: 64px; height: 64px; border-radius: 15px; transition: transform 0.3s ease; object-fit: cover;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'"></a>\n  <a href="#" style="margin: 0 10px; text-decoration: none;">\n    <img src="https://parsefiles.back4app.com/JPaQcFfEEQ1ePBxbf6wvzkPMEqKYHhPYv8boI1Rc/436e0ee2e94c0917600139505aa36e7d_low_res_ChatGPT__Apple_Intelligence_.png" style="width: 64px; height: 64px; border-radius: 15px; transition: transform 0.3s ease; object-fit: cover;" onmouseover="this.style.transform=\'scale(1.1)\'" onmouseout="this.style.transform=\'scale(1)\'"></a>\n</div>'
+        }
+      },
+      {
+        id: 1,
+        name: 'Navigation Bar',
+        title: 'Navigation Bar Template',
+        desc: 'A navigation bar, with a row of rounded app icons on a wide, shallow liquid glass bar. Press Apply to set the glass controls and content to this template.',
+        values: {
+          h: 7,
+          w: 100,
+          r: 100,
+          b2: 2,
+          d1: 11,
+          d2: 14,
+          c1: 0,
+          content: '<div style="width:100%;position: relative;;width:890px">\n<nav style="display:flex;align-items:center;justify-content:space-between;padding:10px 18px;backdrop-filter:blur(8px);">\n  <div style="display:flex;gap:10px;align-items:center;position: relative;">\n    <img src="/logo.svg" alt="Logo" style="width:28px;height:28px;border-radius:8px;"/>\n    <strong>LiquidGlass</strong>\n  </div>\n  <ul style="display:flex;gap:18px;list-style:none;margin:0;padding:0;">\n    <li><a href="#features">Features</a></li>\n    <li><a href="#examples">Examples</a></li>\n    <li><a href="#docs">Docs</a></li>\n  </ul>\n  <div style="display:flex;gap:10px;">\n    <input placeholder="Search" style="padding:8px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);outline:none;"/>\n    <a href="#" style="padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.25);text-decoration:none;">Sign in</a>\n  </div>\n</nav>  </div>'
+        }
+      },
+      {
+        id: 2,
+        name: 'Card',
+        title: 'Card Template',
+        desc: 'A card template, with a top image, content section, and bottom bar. Press Apply to set the glass controls and content to this template.',
+        values: {
+          h: 45,
+          w: 30,
+          r: 9,
+          b2: 9,
+          d1: 5,
+          d2: 19,
+          c1: 34,
+          content: '<div\n    style="\n        width:300px;\n        backdrop-filter:blur(8px);\n        height:450px;\n        aspect-ratio:0.92;\n        display:flex;\n        flex-direction:column;\n        border-radius:3%;\n        overflow:hidden;\n        font-family:Arial,sans-serif;\n        color:white;\n    ">\n <div style="height:56%;width:100%;">\n        <img\n            src="https://picsum.photos/536/353"\n            alt=""\n            style="\n                width:100%;\n                height:100%;\n                object-fit:cover;\n                display:block;\n            ">\n    </div>\n\n    <!-- Content -->\n    <div\n        style="\n            height:29%;\n            display:flex;\n            align-items:start;\n            padding-left:8%;\n            padding-top:4%;\n            box-sizing:border-box;\n            background:rgba(255,255,255,.1);\n            backdrop-filter:blur(10px);\n            border-top:1px solid rgba(255,255,255,.08);\n        ">\n\n        <!-- Avatar -->\n        <div\n            style="\n                width:13%;\n                aspect-ratio:1;\n                border-radius:50%;\n                background:#fff;\n                margin-right:5%;\n                flex-shrink:0;\n            ">\n        </div>\n\n        <div style="flex:1;">\n            <div\n                style="\n                    font-size:clamp(18px,1vw,34px);\n                    font-weight:700;\n                    margin-bottom:0%;\n                ">\n                Card title\n            </div>\n\n            <div\n                style="\n                    font-size:clamp(14px,24px);\n                    color:#7d7d7d;\n                ">\n                This is the description\n            </div>\n        </div>\n    </div>\n\n    <!-- Bottom Bar -->\n    <div\n        style="\n            height:15%;\n            display:flex;\n            background:rgba(255,255,255,.08);\n            backdrop-filter:blur(10px);\n            border-top:1px solid rgba(255,255,255,.32);\n        ">\n\n        <div style="flex:1;display:flex;justify-content:center;align-items:center;font-size:160%;color:#ffffff;">\n            ⚙\n        </div>\n\n        <div style="width:1px;background:rgba(255,255,255,.32);"></div>\n\n        <div style="flex:1;display:flex;justify-content:center;align-items:center;font-size:160%;color:#ffffff;">\n            ✎\n        </div>\n\n        <div style="width:1px;background:rgba(255,255,255,.32);"></div>\n\n        <div style="flex:1;display:flex;justify-content:center;align-items:center;font-size:160%;color:#ffffff;">\n            ⋯\n        </div>\n\n    </div>\n</div>'
+        }
+      }
+    ];
+
+    const WALLPAPERS = [
+      './assets/Wall1.f0d07c34.jpg',
+      './assets/Wall2.4071abaa.jpg',
+      './assets/Wall3.bca01824.jpg',
+      './assets/Wall4.33469f3a.jpg'
+    ];
+
+    // DOM Elements
+    const glassLens = document.getElementById('liquid-glass-lens');
+    const glassLensInner = document.getElementById('liquid-glass-lens-inner');
+    const feNormalMap = document.getElementById('fe_normal_map');
+    const offscreenCanvas = document.getElementById('offscreen-normal-canvas');
+    const desktopViewport = document.getElementById('desktop-viewport');
+    const wallpaperCrossfade = document.getElementById('wallpaper-crossfade');
+    const studioSidebar = document.getElementById('studio-sidebar');
+    const toast = document.getElementById('toast');
+
+    // Windows State with Maximize Memory
+    const windows = [
+      { id: 0, el: document.getElementById('win-0'), isOpen: true, isMin: false, isMax: false, zIndex: 100, orig: { top: 70, left: 100, w: 672, h: 490 } },
+      { id: 1, el: document.getElementById('win-1'), isOpen: false, isMin: false, isMax: false, zIndex: 101, orig: { top: 120, left: 380, w: 384, h: 400 } },
+      { id: 2, el: document.getElementById('win-2'), isOpen: false, isMin: false, isMax: false, zIndex: 102, orig: { top: 140, left: 340, w: 384, h: 360 } },
+      { id: 3, el: document.getElementById('win-3'), isOpen: false, isMin: false, isMax: false, zIndex: 103, orig: { top: 100, left: 240, w: 672, h: 440 } }
+    ];
+    let topZIndex = 110;
+
+    function bringToFront(id) {
+      topZIndex++;
+      const w = windows[id];
+      if (w) {
+        w.zIndex = topZIndex;
+        w.el.style.zIndex = topZIndex;
+      }
+    }
+
+    function openWindow(id) {
+      const w = windows[id];
+      if (!w) return;
+      w.isOpen = true;
+      w.isMin = false;
+      w.el.classList.remove('hidden', 'minimized');
+      bringToFront(id);
+    }
+
+    function closeWindow(id) {
+      const w = windows[id];
+      if (!w) return;
+      w.isOpen = false;
+      w.el.classList.add('hidden');
+    }
+
+    function minimizeWindow(id) {
+      const w = windows[id];
+      if (!w) return;
+      w.isMin = true;
+      w.el.classList.add('minimized');
+    }
+
+    function maximizeWindow(id) {
+      const w = windows[id];
+      if (!w) return;
+      if (!w.isMax) {
+        const rect = w.el.getBoundingClientRect();
+        w.orig = { top: rect.top, left: rect.left, w: rect.width, h: rect.height };
+        w.el.style.top = '60px';
+        w.el.style.left = '20px';
+        w.el.style.width = 'calc(100vw - 40px)';
+        w.el.style.height = 'calc(100vh - 80px)';
+        w.isMax = true;
+      } else {
+        w.el.style.top = `${w.orig.top}px`;
+        w.el.style.left = `${w.orig.left}px`;
+        w.el.style.width = `${w.orig.w}px`;
+        w.el.style.height = `${w.orig.h}px`;
+        w.isMax = false;
+      }
+    }
+
+    // Window Dragging
+    let isDraggingWin = false;
+    let dragWinId = null;
+    let winStartX = 0, winStartY = 0, mouseStartX = 0, mouseStartY = 0;
+
+    function startDragWindow(e, id) {
+      if (e.target.closest('.traffic-dot, button, input, textarea')) return;
+      isDraggingWin = true;
+      dragWinId = id;
+      bringToFront(id);
+      const rect = windows[id].el.getBoundingClientRect();
+      winStartX = rect.left;
+      winStartY = rect.top;
+      mouseStartX = e.clientX;
+      mouseStartY = e.clientY;
+      window.addEventListener('mousemove', onDragWindow);
+      window.addEventListener('mouseup', stopDragWindow);
+      e.preventDefault();
+    }
+
+    function onDragWindow(e) {
+      if (!isDraggingWin || dragWinId === null) return;
+      e.preventDefault();
+      const dx = e.clientX - mouseStartX;
+      const dy = e.clientY - mouseStartY;
+      const el = windows[dragWinId].el;
+      const newX = Math.max(10, Math.min(window.innerWidth - el.offsetWidth - 10, winStartX + dx));
+      const newY = Math.max(10, Math.min(window.innerHeight - el.offsetHeight - 10, winStartY + dy));
+      el.style.left = `${newX}px`;
+      el.style.top = `${newY}px`;
+    }
+
+    function stopDragWindow() {
+      isDraggingWin = false;
+      dragWinId = null;
+      window.removeEventListener('mousemove', onDragWindow);
+      window.removeEventListener('mouseup', stopDragWindow);
+    }
+
+    // Draggable Desktop Icons Setup
+    function setupDraggableDesktopIcons() {
+      const iconIds = [0, 3, 2, 1];
+      iconIds.forEach(id => {
+        const el = document.getElementById(`desktop-icon-${id}`);
+        if (!el) return;
+        let isDrag = false, didMove = false, sx = 0, sy = 0, ix = 0, iy = 0;
+
+        el.addEventListener('mousedown', (e) => {
+          isDrag = true;
+          didMove = false;
+          sx = e.clientX;
+          sy = e.clientY;
+          const rect = el.getBoundingClientRect();
+          ix = rect.left;
+          iy = rect.top;
+
+          const onMove = (ev) => {
+            ev.preventDefault();
+            const dx = ev.clientX - sx;
+            const dy = ev.clientY - sy;
+            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+              didMove = true;
+              el.style.left = `${Math.max(10, Math.min(window.innerWidth - 90, ix + dx))}px`;
+              el.style.top = `${Math.max(10, Math.min(window.innerHeight - 100, iy + dy))}px`;
+            }
+          };
+
+          const onUp = () => {
+            window.removeEventListener('mousemove', onMove);
+            window.removeEventListener('mouseup', onUp);
+            if (!didMove) {
+              openWindow(id);
+            }
+          };
+
+          window.addEventListener('mousemove', onMove);
+          window.addEventListener('mouseup', onUp);
+          e.preventDefault();
+        });
+      });
+    }
+
+    // Draggable Liquid Glass Lens
+    let isDraggingLens = false;
+    let lensStartX = 0, lensStartY = 0, mouseLensStartX = 0, mouseLensStartY = 0;
+
+    glassLens.addEventListener('mousedown', (e) => {
+      if (e.target.closest('a, button, input, textarea')) return;
+      isDraggingLens = true;
+      const rect = glassLens.getBoundingClientRect();
+      lensStartX = rect.left;
+      lensStartY = rect.top;
+      mouseLensStartX = e.clientX;
+      mouseLensStartY = e.clientY;
+      glassLens.style.cursor = 'grabbing';
+      glassLens.style.transform = 'none'; // switch from translate(-50%, -50%)
+      glassLens.style.left = `${lensStartX}px`;
+      glassLens.style.top = `${lensStartY}px`;
+      window.addEventListener('mousemove', onDragLens);
+      window.addEventListener('mouseup', stopDragLens);
+      e.preventDefault();
+    });
+
+    function onDragLens(e) {
+      if (!isDraggingLens) return;
+      e.preventDefault();
+      const dx = e.clientX - mouseLensStartX;
+      const dy = e.clientY - mouseLensStartY;
+      const newX = Math.max(10, Math.min(window.innerWidth - state.w - 10, lensStartX + dx));
+      const newY = Math.max(10, Math.min(window.innerHeight - state.h - 10, lensStartY + dy));
+      glassLens.style.left = `${newX}px`;
+      glassLens.style.top = `${newY}px`;
+    }
+
+    function stopDragLens() {
+      isDraggingLens = false;
+      glassLens.style.cursor = 'grab';
+      window.removeEventListener('mousemove', onDragLens);
+      window.removeEventListener('mouseup', stopDragLens);
+    }
+
+    // Mouse Tracking for dynamic interactive deflection
+    glassLens.addEventListener('mousemove', (e) => {
+      const rect = glassLens.getBoundingClientRect();
+      state.mouseLensX = (e.clientX - rect.left) / rect.width;
+      state.mouseLensY = (e.clientY - rect.top) / rect.height;
+    });
+
+    // =========================================================
+    // CUSTOMIZE WINDOW LOGIC (Exact implementation of function g)
+    // =========================================================
+    function switchCustomTab(idx) {
+      state.activeCustomTab = idx;
+      
+      // Update tab buttons
+      for (let i = 0; i < 3; i++) {
+        document.getElementById(`custom-tab-${i}`).classList.toggle('active', i === idx);
+        document.getElementById(`custom-pane-${i}`).style.display = i === idx ? 'flex' : 'none';
+      }
+
+      const titleEl = document.getElementById('custom-header-title');
+      const action0 = document.getElementById('btn-custom-action-0');
+      const action1 = document.getElementById('btn-custom-action-1');
+      const action2 = document.getElementById('btn-custom-action-2-group');
+
+      if (idx === 0) {
+        titleEl.textContent = 'Customize Glass';
+        action0.style.display = 'block';
+        action1.style.display = 'none';
+        action2.style.display = 'none';
+      } else if (idx === 1) {
+        titleEl.textContent = 'Content Inside';
+        action0.style.display = 'none';
+        action1.style.display = 'block';
+        action2.style.display = 'none';
+        // Populate textarea with current active content
+        const cur = (state.content !== null && state.content !== undefined) ? state.content : '';
+        document.getElementById('custom-content-textarea').value = cur;
+      } else if (idx === 2) {
+        titleEl.textContent = 'Generate HTML/CSS';
+        action0.style.display = 'none';
+        action1.style.display = 'none';
+        action2.style.display = 'flex';
+        generateCustomCode();
+      }
+    }
+
+    function resetToCustomDefaults() {
+      // Exact default settings from target page.js: w:300, h:200, r:150 (clamped to 100), d1:1.5, d2:1.1, c1:1.0, b2:.25
+      state.w = 300;
+      state.h = 200;
+      state.r = 100;
+      state.c1 = 1.0;
+      state.b2 = 0.25;
+      state.d1 = 1.5;
+      state.d2 = 1.1;
+      state.rim = 74;
+      state.content = '';
+
+      const taContent = document.getElementById('custom-content-textarea');
+      if (taContent) taContent.value = '';
+
+      const taCode = document.getElementById('custom-code-textarea');
+      if (taCode) taCode.value = '';
+
+      CONTROLS.forEach(ctrl => {
+        updateCapsuleUI(ctrl.id, state[ctrl.id]);
+        const sEl = document.getElementById(`studio-${ctrl.id}`);
+        const sVal = document.getElementById(`studio-${ctrl.id}-val`);
+        if (sEl) sEl.value = state[ctrl.id];
+        if (sVal) {
+          if (ctrl.id === 'w' || ctrl.id === 'h' || ctrl.id === 'r' || ctrl.id === 'b2') sVal.textContent = `${state[ctrl.id]}px`;
+          else sVal.textContent = (+state[ctrl.id]).toFixed(2);
+        }
+      });
+
+      renderGlass();
+      showToast('Reset to default glass parameters!');
+    }
+
+    // FIX: Clear Preview Live Issue - Properly clears lens inner content to 100% pure transparent glass
+    function clearCustomContent() {
+      state.content = '';
+      const ta = document.getElementById('custom-content-textarea');
+      if (ta) ta.value = '';
+      updateLensContent();
+      showToast('Cleared glass content (pure refraction preview)');
+    }
+
+    function onCustomContentInput(val) {
+      state.content = val;
+      updateLensContent();
+    }
+
+    function generateCustomCode() {
+      const normalMapDataUrl = offscreenCanvas.toDataURL('image/png');
+      const rimAlpha = (state.rim / 100).toFixed(2);
+      const activeContent = state.content ? state.content.trim() : '';
+      const displacementScale = Math.round(lastShaderScale || (state.c1 * 195));
+      const filterId = 'liquid_glass_' + Math.random().toString(36).slice(2, 9);
+
+      const code = `<!-- Liquid Glass Refraction SVG Filter -->
+<svg width="0" height="0" style="position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998;">
+  <defs>
+    <filter id="${filterId}_filter" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB" x="0" y="0" width="${state.w}" height="${state.h}">
+      <feImage id="${filterId}_map" width="${state.w}" height="${state.h}" result="normalMap" href="${normalMapDataUrl}" />
+      <feDisplacementMap in="SourceGraphic" in2="${filterId}_map" scale="${displacementScale}" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+</svg>
+
+<!-- Liquid Glass Lens Element -->
+<div class="liquid-glass-lens" style="
+  display: flex;
+  position: fixed;
+  width: ${state.w}px;
+  height: ${state.h}px;
+  overflow: hidden;
+  border-radius: ${state.r}px;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.25),
+    0 -10px 25px inset rgba(0, 0, 0, 0.15),
+    0 -1px 4px 1px inset rgba(255, 255, 255, ${rimAlpha});
+  cursor: grab;
+  backdrop-filter: url(#${filterId}_filter) blur(${state.b2}px) brightness(${state.d1}) saturate(${state.d2});
+  -webkit-backdrop-filter: url(#${filterId}_filter) blur(${state.b2}px) brightness(${state.d1}) saturate(${state.d2});
+  z-index: 9999;
+  pointer-events: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+">
+  <div class="text-shadow-xs text-shadow-slate-800/60" style="display: flex; margin: auto; color: white;">
+    ${activeContent}
+  </div>
+</div>`;
+
+      document.getElementById('custom-code-textarea').value = code;
+      showToast('Generated standalone production HTML/CSS code!');
+    }
+
+    function copyCustomCode() {
+      const code = document.getElementById('custom-code-textarea').value;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('btn-copy-custom');
+        btn.textContent = 'Copied!';
+        btn.style.background = 'linear-gradient(to bottom, #10b981, #059669)';
+        setTimeout(() => {
+          btn.textContent = 'Copy';
+          btn.style.background = 'var(--blue-btn-gradient)';
+        }, 2000);
+        showToast('Code copied to clipboard!');
+      });
+    }
+
+    // Render the custom Liquid Capsule Sliders matching component u(e) from page.js
+    function renderCapsuleSliders() {
+      const container = document.getElementById('capsule-sliders-container');
+      const maxRadius = state.w > state.h ? state.h / 2 : state.w / 2;
+
+      // URL-encoded radial gradient normal map URI exactly matching decompiled page.js function u
+      const svgNormalMapUri = "data:image/svg+xml;utf8," + encodeURIComponent(`
+        <svg xmlns='http://www.w3.org/2000/svg' width='100%' height='100%'>
+          <radialGradient id='invmap' cx='50%' cy='50%' r='75%'>
+            <stop offset='0%' stop-color='rgb(128,128,255)'/>
+            <stop offset='90%' stop-color='rgb(255,255,255)'/>
+          </radialGradient>
+          <rect width='100%' height='100%' fill='url(#invmap)'/>
+        </svg>
+      `.trim());
+
+      container.innerHTML = CONTROLS.map(ctrl => {
+        const val = state[ctrl.id];
+        const min = ctrl.min;
+        const max = ctrl.id === 'r' ? maxRadius : ctrl.max;
+        const percent = Math.max(0, Math.min(100, (val - min) / (max - min) * 100));
+        const filterId = `mini-liquid-lens-${ctrl.id}`;
+
+        return `
+          <div class="capsule-slider-row" id="capsule-row-${ctrl.id}">
+            <div class="capsule-slider-label">${ctrl.label}</div>
+            <div class="capsule-track-container">
+              <div class="capsule-track" id="capsule-track-${ctrl.id}"
+                   role="slider"
+                   tabindex="0"
+                   aria-label="${ctrl.label}"
+                   aria-valuemin="${min}"
+                   aria-valuemax="${max}"
+                   aria-valuenow="${val}"
+                   onkeydown="handleCapsuleKeyDown(event, '${ctrl.id}')"
+                   onpointerdown="handleTrackPointerDown(event, '${ctrl.id}')"
+                   onpointermove="handleTrackPointerMove(event, '${ctrl.id}')"
+                   onpointerup="handleTrackPointerUp(event, '${ctrl.id}')"
+                   onpointercancel="handleTrackPointerUp(event, '${ctrl.id}')">
+                <div class="capsule-filled-bar" id="capsule-bar-${ctrl.id}" style="width: ${percent}%;"></div>
+                <div class="capsule-thumb" id="capsule-thumb-${ctrl.id}" style="left: ${percent}%;"
+                     onpointerdown="handleThumbPointerDown(event, '${ctrl.id}')">
+                  <h1 class="capsule-thumb-text" id="capsule-text-${ctrl.id}">${Math.min(100, Math.round(percent))}</h1>
+                  <div class="capsule-thumb-lens" style="filter: url(#${filterId});"></div>
+                  <div class="capsule-thumb-tint"></div>
+                  <div class="capsule-thumb-rim"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dedicated inline SVG displacement filter for this slider -->
+            <svg width="0" height="0" aria-hidden="true" focusable="false" style="position: absolute; pointer-events: none;">
+              <filter id="${filterId}" x="0" y="0" width="100%" height="100%" filterUnits="objectBoundingBox">
+                <feImage result="normalMap" preserveAspectRatio="xMidYMid meet" href="${svgNormalMapUri}" />
+                <feDisplacementMap in="SourceGraphic" in2="normalMap" scale="-252" xChannelSelector="R" yChannelSelector="G" />
+              </filter>
+            </svg>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // High Performance Bulletproof Pointer-driven Slider Swiping (matching u(e) in target)
+    let activeDragControl = null;
+    const trackRectCache = {};
+
+    function handleThumbPointerDown(e, ctrlId) {
+      e.stopPropagation();
+      handleTrackPointerDown(e, ctrlId);
+    }
+
+    function handleTrackPointerDown(e, ctrlId) {
+      e.preventDefault();
+      const track = document.getElementById(`capsule-track-${ctrlId}`);
+      if (!track) return;
+
+      try {
+        track.setPointerCapture(e.pointerId);
+      } catch (_) {}
+
+      activeDragControl = ctrlId;
+      document.body.classList.add('capsule-dragging');
+      const thumb = document.getElementById(`capsule-thumb-${ctrlId}`);
+      if (thumb) thumb.classList.add('active');
+
+      // Cache bounding rect once on pointerdown to prevent synchronous layout reflow during swiping
+      trackRectCache[ctrlId] = track.getBoundingClientRect();
+
+      updateCapsuleValue(e.clientX, ctrlId);
+    }
+
+    function handleTrackPointerMove(e, ctrlId) {
+      if (activeDragControl === ctrlId) {
+        updateCapsuleValue(e.clientX, ctrlId);
+      }
+    }
+
+    function handleTrackPointerUp(e, ctrlId) {
+      if (activeDragControl === ctrlId) {
+        activeDragControl = null;
+        document.body.classList.remove('capsule-dragging');
+        const thumb = document.getElementById(`capsule-thumb-${ctrlId}`);
+        if (thumb) thumb.classList.remove('active');
+        const track = document.getElementById(`capsule-track-${ctrlId}`);
+        if (track) {
+          try {
+            track.releasePointerCapture(e.pointerId);
+          } catch (_) {}
+        }
+        delete trackRectCache[ctrlId];
+
+        // Finalize canvas normal map if width or height was dragged
+        if (ctrlId === 'w' || ctrlId === 'h') {
+          generateNormalMap();
+        }
+      }
+    }
+
+    // Global release fallback in case cursor exits browser viewport
+    window.addEventListener('pointerup', (e) => {
+      if (activeDragControl) {
+        handleTrackPointerUp(e, activeDragControl);
+      }
+    });
+    window.addEventListener('pointercancel', (e) => {
+      if (activeDragControl) {
+        handleTrackPointerUp(e, activeDragControl);
+      }
+    });
+
+    function updateCapsuleValue(clientX, ctrlId) {
+      const ctrl = CONTROLS.find(c => c.id === ctrlId);
+      if (!ctrl) return;
+      const rect = trackRectCache[ctrlId] || document.getElementById(`capsule-track-${ctrlId}`)?.getBoundingClientRect();
+      if (!rect) return;
+
+      const min = ctrl.min;
+      const max = ctrl.id === 'r' ? (state.w > state.h ? state.h / 2 : state.w / 2) : ctrl.max;
+      const step = ctrl.step || 1;
+
+      const rawRatio = (clientX - rect.left) / rect.width;
+      const clampedRatio = Math.max(0, Math.min(1, rawRatio));
+      let rawVal = min + clampedRatio * (max - min);
+
+      if (step) {
+        rawVal = Math.round(rawVal / step) * step;
+      }
+      const val = Math.max(min, Math.min(max, +rawVal.toFixed(2)));
+
+      syncSetting(ctrlId, val);
+    }
+
+    function handleCapsuleKeyDown(e, ctrlId) {
+      const ctrl = CONTROLS.find(c => c.id === ctrlId);
+      if (!ctrl) return;
+      const min = ctrl.min;
+      const max = ctrl.id === 'r' ? (state.w > state.h ? state.h / 2 : state.w / 2) : ctrl.max;
+      const step = ctrl.step || 1;
+      const pageStep = (max - min) / 10 || step;
+      let val = state[ctrl.id];
+
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+        val -= step;
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+        val += step;
+      } else if (e.key === 'PageDown') {
+        val -= pageStep;
+      } else if (e.key === 'PageUp') {
+        val += pageStep;
+      } else if (e.key === 'Home') {
+        val = min;
+      } else if (e.key === 'End') {
+        val = max;
+      } else {
+        return;
+      }
+
+      e.preventDefault();
+      val = Math.max(min, Math.min(max, +val.toFixed(2)));
+      syncSetting(ctrlId, val);
+    }
+
+    function updateCapsuleUI(ctrlId, val) {
+      const ctrl = CONTROLS.find(c => c.id === ctrlId);
+      if (!ctrl) return;
+      const min = ctrl.min;
+      const max = ctrl.id === 'r' ? (state.w > state.h ? state.h / 2 : state.w / 2) : ctrl.max;
+      const percent = Math.max(0, Math.min(100, (val - min) / (max - min) * 100));
+
+      const bar = document.getElementById(`capsule-bar-${ctrlId}`);
+      const thumb = document.getElementById(`capsule-thumb-${ctrlId}`);
+      const text = document.getElementById(`capsule-text-${ctrlId}`);
+      const track = document.getElementById(`capsule-track-${ctrlId}`);
+
+      if (bar) bar.style.width = `${percent}%`;
+      if (thumb) thumb.style.left = `${percent}%`;
+      if (text) text.textContent = Math.min(100, Math.round(percent));
+      if (track) {
+        track.setAttribute('aria-valuenow', val);
+        track.setAttribute('aria-valuemax', max);
+      }
+    }
+
+    // Normal Map Generation (Using exact continuous mathematical SDF formula from decompiled page.js:4913 and scaling from page.js:5735)
+    let lastShaderScale = 48.7;
+    let lastShaderBaseA = 48.7;
+    let rafNormalMapId = null;
+
+    function scheduleNormalMapGeneration() {
+      if (rafNormalMapId) return; // Drop redundant frames if a generation is already queued
+      rafNormalMapId = requestAnimationFrame(() => {
+        rafNormalMapId = null;
+        generateNormalMap();
+      });
+    }
+
+    function generateNormalMap() {
+      if (rafNormalMapId) {
+        cancelAnimationFrame(rafNormalMapId);
+        rafNormalMapId = null;
+      }
+
+      const w = Math.max(32, Math.round(state.w));
+      const h = Math.max(32, Math.round(state.h));
+
+      offscreenCanvas.width = w;
+      offscreenCanvas.height = h;
+      const ctx = offscreenCanvas.getContext('2d');
+
+      function length(e, t) {
+        return Math.sqrt(e * e + t * t);
+      }
+      function roundedRectSDF(t, s, n, r, a) {
+        const i = Math.abs(t) - n + a;
+        const o = Math.abs(s) - r + a;
+        return Math.min(Math.max(i, o), 0) + length(Math.max(i, 0), Math.max(o, 0)) - a;
+      }
+      function fragment(e) {
+        let r = e.x - 0.5, a = e.y - 0.5;
+        let dist = roundedRectSDF(r, a, 0.3, 0.2, 0.6);
+        let sVal = Math.max(0, Math.min(1, -(((dist - 0.15) - 0.8) / 0.8)));
+        let sSmooth = sVal * sVal * (3 - 2 * sVal);
+        let nVal = Math.max(0, Math.min(1, (sSmooth - 0) / 1));
+        let i = nVal * nVal * (3 - 2 * nVal);
+        return { x: r * i + 0.5, y: a * i + 0.5 };
+      }
+
+      const t = w, s = h;
+      const n = new Uint8ClampedArray(t * s * 4);
+      const r = new Float32Array(t * s * 2);
+      let rIdx = 0;
+      let a = 0;
+
+      for (let i = 0; i < n.length; i += 4) {
+        const nx = (i / 4) % t;
+        const oy = Math.floor((i / 4) / t);
+        const l = fragment({ x: nx / t, y: oy / s });
+        const c = l.x * t - nx;
+        const d = l.y * s - oy;
+        a = Math.max(a, Math.abs(c), Math.abs(d));
+        r[rIdx++] = c;
+        r[rIdx++] = d;
+      }
+
+      // Exact mathematical scaling and halving from decompiled page.js:5735
+      a *= 0.5;
+      lastShaderBaseA = a || 48.7;
+
+      for (let e = 0, idx = 0; e < n.length; e += 4) {
+        const s_val = r[idx++] / a + 0.5;
+        const i_val = r[idx++] / a + 0.5;
+        n[e] = 255 * s_val;
+        n[e + 1] = 255 * i_val;
+        n[e + 2] = 0;
+        n[e + 3] = 255;
+      }
+
+      ctx.putImageData(new ImageData(n, t, s), 0, 0);
+      const dataUrl = offscreenCanvas.toDataURL();
+
+      // Dynamically update SVG filter bounding box & feImage pixel dimensions to prevent Chromium clipping
+      const filterEl = document.getElementById('liquid_glass_filter');
+      if (filterEl) {
+        filterEl.setAttribute('width', String(w));
+        filterEl.setAttribute('height', String(h));
+      }
+      if (feNormalMap) {
+        feNormalMap.setAttribute('width', String(w));
+        feNormalMap.setAttribute('height', String(h));
+        feNormalMap.setAttribute('href', dataUrl);
+        feNormalMap.setAttributeNS('http://www.w3.org/1999/xlink', 'href', dataUrl);
+      }
+
+      lastShaderScale = a * state.c1;
+      const feDisplacement = document.querySelector('#liquid_glass_filter feDisplacementMap');
+      if (feDisplacement) {
+        feDisplacement.setAttribute('scale', lastShaderScale.toString());
+      }
+    }
+
+    // High performance decoupled Glass Styles update (0ms latency for non-dimensional slider adjustments)
+    function updateGlassStyles() {
+      const rimAlpha = (state.rim / 100).toFixed(2);
+
+      glassLens.style.width = `${state.w}px`;
+      glassLens.style.height = `${state.h}px`;
+      glassLens.style.borderRadius = `${state.r}px`;
+
+      // Multi-layer physical specular lighting + shadow recovered from target
+      glassLens.style.boxShadow = `
+        0 4px 8px rgba(0, 0, 0, 0.25),
+        0 -10px 25px inset rgba(0, 0, 0, 0.15),
+        0 -1px 4px 1px inset rgba(255, 255, 255, ${rimAlpha})
+      `;
+
+      glassLens.style.background = 'transparent';
+      glassLens.style.border = 'none';
+
+      updateLensFilters();
+      updateDistortionScale();
+      updateLensContent();
+    }
+
+    function updateLensFilters() {
+      const filterCss = `url(#liquid_glass_filter) blur(${state.b2}px) brightness(${state.d1}) saturate(${state.d2})`;
+      glassLens.style.backdropFilter = filterCss;
+      glassLens.style.webkitBackdropFilter = filterCss;
+    }
+
+    function updateDistortionScale() {
+      lastShaderScale = (lastShaderBaseA || 48.7) * state.c1;
+      const feDisplacement = document.querySelector('#liquid_glass_filter feDisplacementMap');
+      if (feDisplacement) {
+        feDisplacement.setAttribute('scale', lastShaderScale.toString());
+      }
+    }
+
+    function updateLensContent() {
+      if (state.content !== null && state.content !== undefined && state.content !== '') {
+        glassLensInner.innerHTML = `<div class="text-shadow-xs text-shadow-slate-800/60 font-pop" style="display:flex; margin:auto; color:white; width:100%; height:100%; align-items:center; justify-content:center; font-family:'Poppins',sans-serif;">${state.content}</div>`;
+      } else {
+        glassLensInner.innerHTML = '';
+      }
+    }
+
+    // Render Liquid Glass Element
+    function renderGlass() {
+      generateNormalMap();
+      updateGlassStyles();
+    }
+
+    // Sync Settings across UI with high-performance selective updates
+    function syncSetting(key, val) {
+      state[key] = val;
+
+      // Handle radius clamping and lens dimension changes
+      if (key === 'w' || key === 'h') {
+        const maxR = Math.min(state.w, state.h) / 2;
+        if (state.r > maxR) {
+          state.r = maxR;
+        }
+        updateCapsuleUI('r', state.r);
+
+        glassLens.style.width = `${state.w}px`;
+        glassLens.style.height = `${state.h}px`;
+        glassLens.style.borderRadius = `${state.r}px`;
+
+        scheduleNormalMapGeneration();
+      } else if (key === 'r') {
+        glassLens.style.borderRadius = `${state.r}px`;
+      } else if (key === 'c1') {
+        updateDistortionScale();
+      } else if (key === 'b2' || key === 'd1' || key === 'd2') {
+        updateLensFilters();
+      }
+
+      // Update custom capsule slider UI
+      updateCapsuleUI(key, val);
+
+      // Update studio inspector inputs
+      const sEl = document.getElementById(`studio-${key}`);
+      const sVal = document.getElementById(`studio-${key}-val`);
+      if (sEl) sEl.value = val;
+      if (sVal) {
+        if (key === 'w' || key === 'h' || key === 'r' || key === 'b2') sVal.textContent = `${val}px`;
+        else sVal.textContent = (+val).toFixed(2);
+      }
+    }
+
+    // Wallpaper Switching with smooth cross-fade
+    function switchWallpaper(idx) {
+      if (state.currentWallpaper === idx) return;
+      state.currentWallpaper = idx;
+
+      // Update card active outlines
+      for (let i = 0; i < WALLPAPERS.length; i++) {
+        const card = document.getElementById(`wall-card-${i}`);
+        if (card) card.classList.toggle('active', i === idx);
+      }
+
+      // Smooth cross-fade
+      wallpaperCrossfade.style.backgroundImage = `url('${WALLPAPERS[idx]}')`;
+      wallpaperCrossfade.classList.add('fading');
+
+      setTimeout(() => {
+        desktopViewport.style.backgroundImage = `url('${WALLPAPERS[idx]}')`;
+        wallpaperCrossfade.classList.remove('fading');
+      }, 700);
+
+      showToast(`Wallpaper switched to Theme ${idx + 1}`);
+    }
+
+    // Live Mini-Preview in Template Window matching function B, P, H from target
+    function renderTemplateLiveMiniPreview(idx) {
+      const pBox = document.getElementById('tpl-preview-box');
+      if (idx === 0) {
+        // Dock mini live preview (function B)
+        pBox.innerHTML = `
+          <div style="display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:15px; background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); box-shadow:0 4px 15px rgba(0,0,0,0.2);">
+            <img src="https://s3-new.macosicons.com/macosicons/parse/low_res_YouTube__Dark__Golden_Gate__TS1rpHpGhZ-c6b9d318d1.png" style="width:36px; height:36px; border-radius:9px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="https://parsefiles.back4app.com/JPaQcFfEEQ1ePBxbf6wvzkPMEqKYHhPYv8boI1Rc/0d8939784e7192d5540548669cbffabf_low_res_Final_Cut.png" style="width:36px; height:36px; border-radius:9px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="https://parsefiles.back4app.com/JPaQcFfEEQ1ePBxbf6wvzkPMEqKYHhPYv8boI1Rc/880bf964f1352d71af45f1893717e030_low_res_Visual_Studio_Code.png" style="width:36px; height:36px; border-radius:9px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="https://s3-new.macosicons.com/macosicons/parse/low_res_Siri_Macos_Golden_Gate_27_y2kxuMTZ8n-5a25672169.png" style="width:36px; height:36px; border-radius:9px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+            <img src="https://parsefiles.back4app.com/JPaQcFfEEQ1ePBxbf6wvzkPMEqKYHhPYv8boI1Rc/436e0ee2e94c0917600139505aa36e7d_low_res_ChatGPT__Apple_Intelligence_.png" style="width:36px; height:36px; border-radius:9px; transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.15)'" onmouseout="this.style.transform='scale(1)'">
+          </div>
+        `;
+      } else if (idx === 1) {
+        // Navigation Bar mini live preview (function P)
+        pBox.innerHTML = `
+          <div style="width:96%; display:flex; align-items:center; justify-content:space-between; padding:6px 14px; border-radius:14px; background:rgba(255,255,255,0.18); backdrop-filter:blur(10px); box-shadow:0 4px 15px rgba(0,0,0,0.15); font-size:0.7rem; color:#1e293b; font-weight:600;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <img src="/logo.svg" alt="Logo" style="width:20px; height:20px; border-radius:5px;" />
+              <span>LiquidGlass</span>
+            </div>
+            <div style="display:flex; gap:10px; font-weight:500; color:#475569;">
+              <span>Features</span>
+              <span>Examples</span>
+              <span>Docs</span>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <span style="padding:3px 8px; border-radius:6px; background:rgba(255,255,255,0.5); font-size:0.65rem;">Search</span>
+              <span style="padding:3px 8px; border-radius:8px; background:rgba(255,255,255,0.6); font-size:0.65rem; border:1px solid rgba(255,255,255,0.4);">Sign in</span>
+            </div>
+          </div>
+        `;
+      } else if (idx === 2) {
+        // Card mini live preview (function H)
+        pBox.innerHTML = `
+          <div style="width:140px; height:180px; border-radius:12px; overflow:hidden; background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); box-shadow:0 8px 20px rgba(0,0,0,0.25); display:flex; flex-direction:column; color:white; font-family:Arial,sans-serif;">
+            <div style="height:56%; width:100%;">
+              <img src="https://picsum.photos/536/353" alt="" style="width:100%; height:100%; object-fit:cover; display:block;">
+            </div>
+            <div style="height:29%; display:flex; align-items:center; padding:4px 8px; background:rgba(255,255,255,0.1); backdrop-filter:blur(10px); border-top:1px solid rgba(255,255,255,0.08);">
+              <div style="width:16px; height:16px; border-radius:50%; background:#fff; margin-right:6px; flex-shrink:0;"></div>
+              <div>
+                <div style="font-size:0.65rem; font-weight:700; color:#1e293b;">Card title</div>
+                <div style="font-size:0.55rem; color:#64748b;">This is description</div>
+              </div>
+            </div>
+            <div style="height:15%; display:flex; background:rgba(255,255,255,0.08); backdrop-filter:blur(10px); border-top:1px solid rgba(255,255,255,0.32); align-items:center; justify-content:space-around; font-size:0.75rem; color:#1e293b;">
+              <span>⚙</span>
+              <div style="width:1px; height:60%; background:rgba(255,255,255,0.32);"></div>
+              <span>✎</span>
+              <div style="width:1px; height:60%; background:rgba(255,255,255,0.32);"></div>
+              <span>⋯</span>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Template Navigation in Template Window
+    function selectTemplateNav(idx) {
+      state.activeTemplateIdx = idx;
+      const t = TEMPLATES[idx];
+
+      for (let i = 0; i < TEMPLATES.length; i++) {
+        const btn = document.getElementById(`tpl-nav-${i}`);
+        if (btn) btn.classList.toggle('active', i === idx);
+      }
+
+      const headerTitle = document.getElementById('tpl-header-title');
+      if (headerTitle) headerTitle.textContent = t.title;
+      const previewTitle = document.getElementById('tpl-preview-title');
+      if (previewTitle) previewTitle.textContent = t.name;
+      const previewDesc = document.getElementById('tpl-preview-desc');
+      if (previewDesc) previewDesc.textContent = t.desc;
+
+      renderTemplateLiveMiniPreview(idx);
+    }
+
+    function applyActiveTemplate() {
+      const t = TEMPLATES[state.activeTemplateIdx];
+      const vals = t.values;
+      state.h = Math.round(990 * vals.h / 100);
+      state.w = Math.round(990 * vals.w / 100);
+      state.r = Math.round(vals.r * (vals.w > vals.h ? 9.9 * vals.h / 2 : 9.9 * vals.w / 2) / 100);
+      state.b2 = Math.max(0.25, Math.round(19.75 * vals.b2 / 100));
+      state.d1 = +Math.abs(9.5 * vals.d1 / 100).toFixed(2);
+      state.d2 = Math.round(9.9 * vals.d2 / 100);
+      state.c1 = 1.0;
+      state.content = vals.content;
+
+      // Update Content Inside textarea
+      const ta = document.getElementById('custom-content-textarea');
+      if (ta) ta.value = vals.content;
+
+      // Update all capsule sliders and studio inspector
+      CONTROLS.forEach(ctrl => {
+        updateCapsuleUI(ctrl.id, state[ctrl.id]);
+        const sEl = document.getElementById(`studio-${ctrl.id}`);
+        const sVal = document.getElementById(`studio-${ctrl.id}-val`);
+        if (sEl) sEl.value = state[ctrl.id];
+        if (sVal) {
+          if (ctrl.id === 'w' || ctrl.id === 'h' || ctrl.id === 'r' || ctrl.id === 'b2') sVal.textContent = `${state[ctrl.id]}px`;
+          else sVal.textContent = (+state[ctrl.id]).toFixed(2);
+        }
+      });
+
+      renderGlass();
+      showToast(`Applied ${t.name} Template!`);
+    }
+
+    // View Mode Switcher
+    function setViewMode(mode) {
+      state.viewMode = mode;
+      const btnD = document.getElementById('btn-mode-desktop');
+      const btnS = document.getElementById('btn-mode-studio');
+      if (btnD) btnD.classList.toggle('active', mode === 'desktop');
+      if (btnS) btnS.classList.toggle('active', mode === 'studio');
+
+      if (mode === 'studio') {
+        studioSidebar.classList.add('visible');
+      } else {
+        studioSidebar.classList.remove('visible');
+      }
+    }
+
+    // Spotlight Search Modal
+    const SEARCH_ITEMS = [
+      { type: 'Template', title: 'macOS Dock Template', desc: 'Curated app launcher dock with hover magnification', action: () => { openWindow(3); selectTemplateNav(0); applyActiveTemplate(); } },
+      { type: 'Template', title: 'Navigation Bar Template', desc: 'Frosted navbar with search input and links', action: () => { openWindow(3); selectTemplateNav(1); applyActiveTemplate(); } },
+      { type: 'Template', title: 'Card Showcase Template', desc: 'Physical glass card with hero image and toolbar', action: () => { openWindow(3); selectTemplateNav(2); applyActiveTemplate(); } },
+      { type: 'Action', title: 'Clear Glass Content (Pure Refraction)', desc: 'Show completely clear transparent glass without inner HTML', action: () => clearCustomContent() },
+      { type: 'Action', title: 'Reset Glass Defaults', desc: 'Reset all optical properties to target defaults', action: () => resetToCustomDefaults() },
+      { type: 'Window', title: 'Customize Effect', desc: 'Open glass sliders (width, height, radius, distortion)', action: () => openWindow(0) },
+      { type: 'Window', title: 'Wallpaper Selector', desc: 'Choose from 4 authentic high-res wallpapers', action: () => openWindow(2) },
+      { type: 'Window', title: 'About Liquid Glass', desc: 'Developer information, REA audit, and mechanics', action: () => openWindow(1) },
+      { type: 'Action', title: 'Export HTML & SVG Code', desc: 'Generate self-contained code for your project', action: () => openCodeModal('html') },
+      { type: 'Action', title: 'Export React / Next.js Component', desc: 'Reusable JSX component with inline normal map', action: () => openCodeModal('react') },
+      { type: 'Action', title: 'Export Tailwind CSS Snippet', desc: 'Utility classes and SVG filter markup', action: () => openCodeModal('tailwind') },
+      { type: 'Action', title: 'View REA Reverse-Engineering Evidence', desc: 'Inspect decompiled AST nodes and refraction math', action: () => openEvidenceModal() }
+    ];
+
+    function openSpotlight() {
+      const modal = document.getElementById('spotlight-modal');
+      modal.classList.add('open');
+      const input = document.getElementById('spotlight-input');
+      input.value = '';
+      input.focus();
+      renderSpotlightResults(SEARCH_ITEMS);
+    }
+
+    function closeSpotlight() {
+      document.getElementById('spotlight-modal').classList.remove('open');
+    }
+
+    function handleSpotlightBackdropClick(e) {
+      if (e.target.id === 'spotlight-modal') closeSpotlight();
+    }
+
+    function onSpotlightInput(q) {
+      const query = q.trim().toLowerCase();
+      if (!query) {
+        renderSpotlightResults(SEARCH_ITEMS);
+        return;
+      }
+      const filtered = SEARCH_ITEMS.filter(item => 
+        item.title.toLowerCase().includes(query) ||
+        item.desc.toLowerCase().includes(query) ||
+        item.type.toLowerCase().includes(query)
+      );
+      renderSpotlightResults(filtered);
+    }
+
+    function renderSpotlightResults(items) {
+      const container = document.getElementById('spotlight-results');
+      if (!items.length) {
+        container.innerHTML = `<div style="padding:24px; text-align:center; color:#64748b; font-size:0.84rem;">No matching templates or actions found.</div>`;
+        return;
+      }
+      container.innerHTML = items.map((item, i) => `
+        <div class="spotlight-result-item ${i === 0 ? 'highlighted' : ''}" onclick="executeSpotlightAction(${SEARCH_ITEMS.indexOf(item)})">
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <div style="font-weight:600; font-size:0.86rem; color:#f8fafc;">${item.title}</div>
+            <div style="font-size:0.74rem; color:#94a3b8;">${item.desc}</div>
+          </div>
+          <span style="font-size:0.68rem; font-weight:600; padding:2px 8px; border-radius:999px; background:rgba(255,255,255,0.08); color:#60a5fa; text-transform:uppercase;">${item.type}</span>
+        </div>
+      `).join('');
+    }
+
+    function executeSpotlightAction(idx) {
+      closeSpotlight();
+      const item = SEARCH_ITEMS[idx];
+      if (item && item.action) item.action();
+    }
+
+    // Keyboard Shortcuts (⌘K / Ctrl+K and ESC)
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        const modal = document.getElementById('spotlight-modal');
+        if (modal.classList.contains('open')) closeSpotlight();
+        else openSpotlight();
+      } else if (e.key === 'Escape') {
+        closeSpotlight();
+        closeCodeModal();
+        closeEvidenceModal();
+      }
+    });
+
+    // Code Export Modal
+    let activeCodeTab = 'html';
+
+    function openCodeModal(tab = 'html') {
+      activeCodeTab = tab;
+      setCodeTab(tab);
+      document.getElementById('code-modal').classList.add('open');
+    }
+
+    function closeCodeModal() {
+      document.getElementById('code-modal').classList.remove('open');
+    }
+
+    function setCodeTab(tab) {
+      activeCodeTab = tab;
+      document.getElementById('tab-html').classList.toggle('active', tab === 'html');
+      document.getElementById('tab-react').classList.toggle('active', tab === 'react');
+      document.getElementById('tab-tailwind').classList.toggle('active', tab === 'tailwind');
+
+      const normalMapDataUrl = offscreenCanvas.toDataURL('image/png');
+      const rimAlpha = (state.rim / 100).toFixed(2);
+      const codeOutput = document.getElementById('code-output');
+      const activeContent = state.content !== null && state.content !== undefined ? state.content : (TEMPLATES[state.activeTemplateIdx]?.values?.content || '');
+      const displacementScale = Math.round(lastShaderScale || (state.c1 * 48.7));
+
+      if (tab === 'html') {
+        codeOutput.textContent = `<!-- Liquid Glass Refraction Element (Standalone HTML + SVG) -->
+<svg width="0" height="0" style="position:fixed; top:0; left:0; pointer-events:none;">
+  <defs>
+    <filter id="liquid_glass_filter" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feImage href="${normalMapDataUrl.slice(0, 80)}...[base64 normal map]..." result="normalMap" />
+      <feDisplacementMap in="SourceGraphic" in2="normalMap" scale="${displacementScale}" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+</svg>
+
+<div class="liquid-glass-lens" style="
+  width: ${state.w}px;
+  height: ${state.h}px;
+  border-radius: ${state.r}px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.25), 0 -10px 25px inset rgba(0,0,0,0.15), 0 -1px 4px 1px inset rgba(255,255,255,${rimAlpha});
+  backdrop-filter: url(#liquid_glass_filter) blur(${state.b2}px) brightness(${state.d1}) saturate(${state.d2});
+  -webkit-backdrop-filter: url(#liquid_glass_filter) blur(${state.b2}px) brightness(${state.d1}) saturate(${state.d2});
+  display: flex;
+  align-items: center;
+  justify-content: center;
+">
+  <!-- Lens Children -->
+  ${activeContent.trim()}
+</div>`;
+      } else if (tab === 'react') {
+        codeOutput.textContent = `import React from 'react';
+
+export default function LiquidGlassLens({ children }) {
+  return (
+    <>
+      <svg width="0" height="0" style={{ position: 'fixed', top: 0, left: 0, pointerEvents: 'none' }}>
+        <defs>
+          <filter id="liquid_glass_filter" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+            <feImage href="${normalMapDataUrl.slice(0, 60)}..." result="normalMap" />
+            <feDisplacementMap in="SourceGraphic" in2="normalMap" scale={${displacementScale}} xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
+
+      <div
+        style={{
+          width: ${state.w},
+          height: ${state.h},
+          borderRadius: ${state.r},
+          boxShadow: '0 4px 8px rgba(0,0,0,0.25), 0 -10px 25px inset rgba(0,0,0,0.15), 0 -1px 4px 1px inset rgba(255,255,255,${rimAlpha})',
+          backdropFilter: 'url(#liquid_glass_filter) blur(${state.b2}px) brightness(${state.d1}) saturate(${state.d2})',
+          WebkitBackdropFilter: 'url(#liquid_glass_filter) blur(${state.b2}px) brightness(${state.d1}) saturate(${state.d2})',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        {children}
+      </div>
+    </>
+  );
+}`;
+      } else if (tab === 'tailwind') {
+        codeOutput.textContent = `<!-- Tailwind CSS + SVG Displacement Filter -->
+<div class="relative w-[${state.w}px] h-[${state.h}px] rounded-[${state.r}px] bg-white/5 border border-white/${Math.round(rimAlpha * 35)} shadow-[0_4px_8px_rgba(0,0,0,0.25),inset_0_-10px_25px_rgba(0,0,0,0.15),inset_0_-1px_4px_1px_rgba(255,255,255,${rimAlpha})] [backdrop-filter:url(#liquid_glass_filter)_blur(${state.b2}px)_brightness(${state.d1})_saturate(${state.d2})] flex items-center justify-center">
+  ${activeContent.trim()}
+</div>`;
+      }
+    }
+
+    function copyCurrentCode() {
+      const code = document.getElementById('code-output').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('Code copied to clipboard!');
+      });
+    }
+
+    // Evidence Modal
+    function openEvidenceModal() {
+      document.getElementById('evidence-modal').classList.add('open');
+    }
+    function closeEvidenceModal() {
+      document.getElementById('evidence-modal').classList.remove('open');
+    }
+
+    // Toast
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    // Reset Defaults
+    function resetDefaults() {
+      resetToCustomDefaults();
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      setupDraggableDesktopIcons();
+      selectTemplateNav(0);
+      renderCapsuleSliders();
+      renderGlass();
+      bringToFront(0); // focus customize window initially
+    });
+  </script>
+</body>
+</html>
